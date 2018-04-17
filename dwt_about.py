@@ -176,7 +176,7 @@ def update_check(parent):
     if release['prerelease']:
         return
     new = release['tag_name']
-    
+
     try:
         if StrictVersion(__version__) < StrictVersion(new.lstrip('v')):
             info = wx.MessageDialog(parent, message="DWT {v} is now available!\nGo to download page?".format(v=new),
