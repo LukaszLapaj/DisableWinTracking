@@ -32,6 +32,7 @@ __version__ = "3.2.1"
 def about_dialog(parent):
     license_text = """
     Copyright (C) 10se1ucgo 2015-2016
+    Copyright (C) Łukasz Łapaj 2018
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,11 +50,12 @@ def about_dialog(parent):
     about_info = wx.adv.AboutDialogInfo()
     about_info.SetName("Disable Windows 10 Tracking")
     about_info.SetVersion("v{v}".format(v=__version__))
-    about_info.SetCopyright("Copyright (C) 10se1ucgo 2015-2016")
-    about_info.SetDescription("A tool to disable tracking in Windows 10")
-    about_info.SetWebSite("https://github.com/10se1ucgo/DisableWinTracking", "GitHub repository")
+    about_info.SetCopyright("Copyright (C) 10se1ucgo 2015-2016 Copyright (C) Łukasz Łapaj 2018")
+    about_info.SetDescription("A tool to disable tracking and ads in Windows 10")
+    about_info.SetWebSite("https://github.com/LukaszLapaj/DisableWinTracking", "GitHub repository")
     about_info.AddDeveloper("10se1ucgo")
     about_info.AddDeveloper("Ruined1")
+    about_info.AddDeveloper("Łukasz Łapaj")
     about_info.SetLicense(license_text)
     wx.adv.AboutBox(about_info, parent)
 
@@ -111,7 +113,8 @@ class Licenses(wx.Dialog):
     4. If you write modifications of your own for this library, it is your
     choice whether to permit this exception to apply to your modifications.  If
     you do not wish that, you must delete the exception notice from such code
-    and/or adjust the licensing conditions notice accordingly."""
+    and/or adjust the licensing conditions notice accordingly.
+    """
         wxw_text = wx.StaticText(self.scrolled_panel, label=wxw_license)
         wxw_text.SetFont(mono_font)
 
@@ -146,7 +149,8 @@ class Licenses(wx.Dialog):
     PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
     LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    """
         pywin_text = wx.StaticText(self.scrolled_panel, label=pywin_license)
         pywin_text.SetFont(mono_font)
 

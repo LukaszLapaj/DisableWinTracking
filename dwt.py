@@ -70,8 +70,8 @@ class ConsoleDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, source=report_button, handler=self.submit_issue)
         self.SetSizer(top_sizer)
 
-    def submit_issue(self, event):
-        webbrowser.open_new_tab("https://github.com/10se1ucgo/DisableWinTracking/issues/new")
+    def submit_issue(self):
+        webbrowser.open_new_tab("https://github.com/LukaszLapaj/DisableWinTracking/")
 
 
 class MainFrame(wx.Frame):
@@ -85,7 +85,7 @@ class MainFrame(wx.Frame):
         settings = file_menu.Append(wx.ID_SETUP, "&Settings", "DWT settings")
 
         help_menu = wx.Menu()
-        about = help_menu.Append(wx.ID_ABOUT, "&About", "About DWT")
+        # about = help_menu.Append(wx.ID_ABOUT, "&About", "About DWT")
         licenses = help_menu.Append(wx.ID_ANY, "&Licenses", "Open-source licenses")
 
         menu_bar = wx.MenuBar()
@@ -96,7 +96,7 @@ class MainFrame(wx.Frame):
         check_elevated()
 
         self.SetIcon(wx.Icon(sys.executable, wx.BITMAP_TYPE_ICO))
-        self.Bind(wx.EVT_MENU, lambda x: dwt_about.about_dialog(self), about)
+        # self.Bind(wx.EVT_MENU, lambda x: dwt_about.about_dialog(self), about)
         self.Bind(wx.EVT_MENU, panel.settings, settings)
         self.Bind(wx.EVT_MENU, lambda x: dwt_about.Licenses(self), licenses)
         self.Layout()
@@ -143,7 +143,7 @@ class MainPanel(wx.Panel):
 
         # Flush DNS Service
         self.flush_dns_check = wx.CheckBox(self, label="Flush DNS Service")
-        self.flush_dns_check.SetToolTip("")
+        self.flush_dns_check.SetToolTip("This will restart DNS Service to apply changes instantly")
         self.flush_dns_check.SetValue(1)
 
         # IP block checkbox
@@ -165,7 +165,7 @@ class MainPanel(wx.Panel):
         self.mode_rad.SetItemToolTip(item=0, text="Applies the selected settings.")
         self.mode_rad.SetItemToolTip(item=1, text="Reverts the selected settings.")
 
-        go_button = wx.Button(self, label="Go!")
+        go_button = wx.Button(self, label="Run!")
 
         top_sizer = wx.BoxSizer(wx.VERTICAL)
         top_row_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -446,12 +446,11 @@ if __name__ == '__main__':
     if '-silent' in sys.argv:
         silent()
         sys.exit(0)
-
     wx_app = wx.App()
     frame = MainFrame()
     console = ConsoleDialog(sys.stdout)
     setup_logging()
     sys.excepthook = exception_hook
-    dwt_about.update_check(None)
+    #dwt_about.update_check(None)
     frame.Show()
     wx_app.MainLoop()

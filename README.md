@@ -1,22 +1,10 @@
 # DisableWinTracking
 
-A tool that I created to use some of the known methods of disabling tracking and implement adblocking in Windows 10.
+### A tool that use some of the known methods of disabling tracking and implementing adblock in Windows 10.
 
-<img src="screenshots/win10.png" width="450">
+<img src="screenshots/win10.png" width="445">
 
-## CYRILLIC LANGUAGES WARNING
-
-## ПРЕДУПРЕЖДЕНИЕ ДЛЯ КИРИЛЛИЧЕСКИХ ЯЗЫКОВ
-
-**Slavic languages: Belarusian, Bulgarian, Macedonian, Russian, Rusyn, Serbo-Croatian (for Standard Serbian, Bosnian, and Montenegrin), Ukrainian.**
-
-**Славянские языки: белорусский, болгарский, македонский, русский, русинский, сербохорватский (для стандартного сербского, боснийского и черногорского), украинский.**
-
-This program cannot run correctly from a file path that contains Cyrillic characters. Make sure to run it from your root folder (usually C:/ ) so that you don't get runtime errors.
-
-Эта программа не может работать корректно, если в пути к файлу есть кириллические символы. Обязательно запустите его из корневой папки ( обычно C:/ ), чтобы вы не получали ошибок во время выполнения.
-
-## DOWNLOAD
+## Download
 
 [DOWNLOAD EXE HERE](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
 
@@ -26,15 +14,15 @@ This program cannot run correctly from a file path that contains Cyrillic charac
 
 You can either:
 
-A. [Run the binary uploaded to the repo as an Administrator and select which options you'd like](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
+**A)** Run the [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) uploaded to the repository as an Administrator and select which options you'd like
 
-B. Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like  
+**B)** Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like  
+
+**You still need to run it as administrator.**
 
 #### Silent
 
-Either can be run with the -silent argument as of v3.1. This will perform all available options of the version you're using.
-
-**You still need to run it as administrator.**
+Either can be run with the -silent argument. This will perform all available options of the version you're using, excluding any hosts file modifications.
 
 ## Dependencies
 This is only to run the script from source, [download the exe here](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
@@ -84,10 +72,24 @@ Runs `C:\Windows\SysWOW64\OneDriveSetup.exe /uninstall` (64 bit) or
 Also disables registry entries that keep the OneDrive Icon pinned to your Windows Explorer list:
 <img src="http://i.imgur.com/26yfnGD.png" width="500">
 
-## Delete Services vs Disable Services?
+## Delete Services vs Disable Services
 
 Selecting "Disable" will simply stop the services from being able to run.
 Selecting the "Delete" choice will completely delete the tracking services.
+
+## CYRILLIC LANGUAGES WARNING
+
+**Slavic languages: Belarusian, Bulgarian, Macedonian, Russian, Rusyn, Serbo-Croatian (for Standard Serbian, Bosnian, and Montenegrin), Ukrainian.**
+
+**Славянские языки: белорусский, болгарский, македонский, русский, русинский, сербохорватский (для стандартного сербского, боснийского и черногорского), украинский.**
+
+This program cannot run correctly from a file path that contains Cyrillic characters. Make sure to run it from your root folder (usually C:/ ) so that you don't get runtime errors.
+
+Эта программа не может работать корректно, если в пути к файлу есть кириллические символы. Обязательно запустите его из корневой папки ( обычно C:/ ), чтобы вы не получали ошибок во время выполнения.
+
+## Credits
+* [StevenBlack](https://github.com/StevenBlack) for adblocking hosts file
+* [10se1ucgo](https://github.com/10se1ucgo) for initial project
 
 ## License
 

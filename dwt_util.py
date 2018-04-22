@@ -33,16 +33,15 @@ logger = logging.getLogger('dwt.util')
 
 
 class CalledProcessError(Exception):
-    """This exception is raised by subprocess_handler() returns a non-zero exit status.
-    It is a direct copy + paste backport from Python 3, as the Python 2 version does not
-    include the "stderr" property.
-
-    Original docstring:
-        This exception is raised when a process run by check_call() or
-        check_output() returns a non-zero exit status.
-        The exit status will be stored in the returncode attribute;
-        check_output() will also store the output in the output attribute.
-    """
+    # This exception is raised by subprocess_handler() returns a non-zero exit status.
+    # It is a direct copy + paste backport from Python 3, as the Python 2 version does not
+    # include the "stderr" property.
+    #
+    # Original docstring:
+    #     This exception is raised when a process run by check_call() or
+    #     check_output() returns a non-zero exit status.
+    #     The exit status will be stored in the returncode attribute;
+    #     check_output() will also store the output in the output attribute.
 
     def __init__(self, returncode, cmd, output=None, stderr=None):
         self.returncode = returncode
@@ -55,7 +54,7 @@ class CalledProcessError(Exception):
 
     @property
     def stdout(self):
-        """Alias for output attribute, to match stderr"""
+        # Alias for output attribute, to match stderr
         return self.output
 
     @stdout.setter
@@ -94,7 +93,7 @@ def ip_block(ip_list, undo):
 
 def clear_diagtrack():
     file = os.path.join(os.environ['SYSTEMDRIVE'],
-                        ('\\ProgramData\\Microsoft\\Diagnosis\\ETLLogs\\AutoLogger\\AutoLogger-Diagtrack-Listener.etl'))
+                        '\\ProgramData\\Microsoft\\Diagnosis\\ETLLogs\\AutoLogger\\AutoLogger-Diagtrack-Listener.etl')
 
     cmds = ['sc delete DiagTrack',
             'sc delete dmwappushservice',
@@ -105,7 +104,6 @@ def clear_diagtrack():
     for cmd in cmds:
         i += 1
         service = shlex.split(cmd, 'sc delete ')
-
         output = subprocess_handler(cmd)
         if output[0] in [0, 1060, 1072]:
             if output[0] == 0:
@@ -261,9 +259,17 @@ def hosts_ad_removal(entries, undo):
     urllib.request.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
     # urllib.request.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")
     null_ip = "0.0.0.0 "
-    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
     nulled_entries = [null_ip + x for x in entries]
-    if not undo:
+    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
+    if undo:
+        try:
+            with open(hosts_path, 'a') as f:
+                f.write('\n' + '\n'.join(nulled_entries))
+            os.remove('hosts.txt')
+            return True
+        except (WindowsError, IOError):
+            logger.exception("Hosts: Failed to undo hosts file")
+    else:
         try:
             with open('hosts.txt', 'r') as hosts, tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
                 for line in hosts:
@@ -271,16 +277,10 @@ def hosts_ad_removal(entries, undo):
                         temp.write(line)
                 temp.close()
                 shutil.move(temp.name, hosts_path)
+            os.remove('hosts.txt')
             return True
         except OSError:
             logger.exception("Hosts: Failed to modify hosts file")
-    else:
-        try:
-            with open(hosts_path, 'a') as f:
-                f.write('\n' + '\n'.join(nulled_entries))
-            return True
-        except (WindowsError, IOError):
-            logger.exception("Hosts: Failed to undo hosts file")
     return False
 
 
