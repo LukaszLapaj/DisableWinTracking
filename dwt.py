@@ -128,6 +128,11 @@ class MainPanel(wx.Panel):
         self.extra_host_check.SetToolTip("For the paranoid. Adds extra domains to the HOSTS file.\n"
                                          "May cause issues with Skype, Dr. Watson, Hotmail and/or Error Reporting.")
 
+        # Flush DNS Service
+        self.flush_dns_check = wx.CheckBox(self, label="Flush DNS Service")
+        self.flush_dns_check.SetToolTip("")
+        self.flush_dns_check.SetValue(1)
+
         # IP block checkbox
         self.ip_check = wx.CheckBox(self, label="Block tracking IP addresses")
         self.ip_check.SetToolTip("Blocks known tracking IP addresses with Windows Firewall.")
@@ -166,6 +171,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.telemetry_check, 0, wx.ALL, 1)
         check_sizer.Add(self.host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.extra_host_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.flush_dns_check, 0, wx.ALL, 1)
         check_sizer.Add(self.ip_check, 0, wx.ALL, 1)
         check_sizer.Add(self.wifisense_check, 0, wx.ALL, 1)
         check_sizer.Add(self.onedrive_check, 0, wx.ALL, 1)
@@ -235,6 +241,8 @@ class MainPanel(wx.Panel):
             dwt_util.host_file(self.picked_extra, undo=undo)
         if self.defender_check.IsChecked():
             dwt_util.defender(undo=undo)
+        if self.flush_dns_check.IsChecked():
+            dwt_util.flush_dns()
         if self.wifisense_check.IsChecked():
             dwt_util.wifisense(undo=undo)
         if self.onedrive_check.IsChecked():

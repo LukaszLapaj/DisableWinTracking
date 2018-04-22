@@ -282,6 +282,10 @@ def host_file(entries, undo):
     return False
 
 
+def flush_dns():
+    os.system('ipconfig /flushdns > NUL')
+
+
 def app_manager(apps):
     running = {}
     for app in apps:
