@@ -252,11 +252,9 @@ class MainPanel(wx.Panel):
         if self.ads_check.IsChecked():
             dwt_util.hosts_ad_removal(self.unpicked_ads, undo=undo)
         if self.host_check.IsChecked():
-            dwt_util.host_file(self.picked_normal, undo=undo)
+            dwt_util.host_tracking_removal(self.picked_normal, undo=undo)
         if self.extra_host_check.IsChecked():
-            dwt_util.host_file(self.picked_extra, undo=undo)
-        if self.defender_check.IsChecked():
-            dwt_util.defender(undo=undo)
+            dwt_util.host_tracking_removal(self.picked_extra, undo=undo)
         if self.flush_dns_check.IsChecked():
             dwt_util.flush_dns()
         if self.wifisense_check.IsChecked():

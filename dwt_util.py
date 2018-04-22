@@ -283,11 +283,10 @@ def hosts_ad_removal(entries, undo):
     return False
 
 
-def host_file(entries, undo):
+def host_tracking_removal(entries, undo):
     null_ip = "0.0.0.0 "
     nulled_entires = [null_ip + x for x in entries]
     hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
-
     if undo:
         try:
             with open(hosts_path, 'r') as hosts, tempfile.NamedTemporaryFile(delete=False) as temp:
