@@ -1,8 +1,8 @@
 # DisableWinTracking
 
-A tool that I created to use some of the known methods of disabling tracking in Windows 10.
+A tool that I created to use some of the known methods of disabling tracking and implement adblocking in Windows 10.
 
-<img src="screenshots/win10.png" width="440">
+<img src="screenshots/win10.png" width="450">
 
 ## CYRILLIC LANGUAGES WARNING
 
@@ -26,7 +26,7 @@ This program cannot run correctly from a file path that contains Cyrillic charac
 
 You can either:
 
-A. [Run the binary uploaded to the Release tab as an Administrator and select which options you'd like](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
+A. [Run the binary uploaded to the repo as an Administrator and select which options you'd like](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
 
 B. Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like  
 
@@ -82,7 +82,7 @@ Runs `C:\Windows\SysWOW64\OneDriveSetup.exe /uninstall` (64 bit) or
 `C:\Windows\System32\OneDriveSetup.exe /uninstall` (32 bit)
 
 Also disables registry entries that keep the OneDrive Icon pinned to your Windows Explorer list:
-<img src="http://i.imgur.com/26yfnGD.png" width="440">
+<img src="http://i.imgur.com/26yfnGD.png" width="500">
 
 ## Delete Services vs Disable Services?
 
@@ -93,7 +93,7 @@ Selecting the "Delete" choice will completely delete the tracking services.
 
 ```
 Copyright (C) 10se1ucgo 2016
-Copyright (C) lukaszlapaj 2018
+Copyright (C) Łukasz Łapaj 2018
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
