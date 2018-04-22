@@ -114,22 +114,27 @@ class MainPanel(wx.Panel):
 
         self.service_check = wx.CheckBox(self, label="Services")
         self.service_check.SetToolTip("Disables or deletes tracking services. Choose option in 'Services Method'")
+        self.service_check.SetValue(1)
 
         self.diagtrack_check = wx.CheckBox(self, label="Clear DiagTrack log")
         self.diagtrack_check.SetToolTip("Clears Dianostic Tracking log and prevents modification to it.")
+        self.diagtrack_check.SetValue(1)
 
         # Telemetry checkbox
         self.telemetry_check = wx.CheckBox(self, label="Telemetry")
         self.telemetry_check.SetToolTip("Sets 'AllowTelemetry' to 0. "
                                         "On non-Enterprise OS editions, requires HOSTS file modification.")
+        self.telemetry_check.SetValue(1)
 
         # Ad HOSTS file checkbox
         self.ads_check = wx.CheckBox(self, label="Block ad domains")
         self.ads_check.SetToolTip("Adds known ad domains to HOSTS file.")
+        self.ads_check.SetValue(1)
 
         # HOSTS file checkbox
         self.host_check = wx.CheckBox(self, label="Block tracking domains")
         self.host_check.SetToolTip("Adds known tracking domains to HOSTS file. Required to disable Telemetry")
+        self.host_check.SetValue(1)
 
         # Extra HOSTS checkbox
         self.extra_host_check = wx.CheckBox(self, label="Block even more tracking domains")
