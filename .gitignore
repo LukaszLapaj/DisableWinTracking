@@ -22,3 +22,5 @@ dwticon.res
 # Other
 getapps.py
 getreleases.py
+hosts.txt
+build.bat
