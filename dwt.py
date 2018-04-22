@@ -320,7 +320,7 @@ class MainPanel(wx.Panel):
 
         adblock_whitelist = (
             'clickserve.dartsearch.net', 'tc.tradetracker.net', 'www.googleadservices.com', 'googleadservices.com',
-            'ad.doubleclick.net'
+            'ad.doubleclick.net', 'ojrq.net', 'clkuk.tradedoubler.com', 'tracking.publicidees.com'
         )
 
         normal_domain_picker = ItemsPicker(dialog, choices=[], selectedLabel="Domains to be blocked",
