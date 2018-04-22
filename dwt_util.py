@@ -131,41 +131,6 @@ def clear_diagtrack():
     else:
         logger.info("DiagTrack: Completed successfully, without errors.")
 
-    '''
-    This is an ORDERED dictionary. It will always run in order, not subject to the devastation
-    of a standard dictionary, so no worries.
-    '''
-
-    # temporarily removing this code in favor of something that actually works
-    '''
-    cmds = OrderedDict()
-    cmds["takeown /f {0}".format(file)]="Take Ownership"
-    cmds["icacls {0} /grant administrators:F".format(file)]="Grant Admin Privilege"
-    cmds["icacls {0} /inheritance:r /deny SYSTEM:F /grant Administrators:F".format(file)]="Deny System Privilege"
-
-    i = 0
-
-    for x, y in cmds.iteritems():
-        i += 1
-        
-        if i == 3:
-            try:
-                open(file, 'w').close()
-                logger.info("DiagTrack: Cleared AutoLogger-Diagtrack-Listener.etl")
-            except:
-                logger.exception("DiagTrack: Couldn't open AutoLogger-Diagtrack-Listener.etl for writing")
-
-        p = subprocess.Popen(x, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        output = p.communicate()
-        logger.info("DiagTrack: {0} of AutoLogger-Diagtrack-Listener.etl was successful".format(y))
-
-        if p.returncode:
-            logger.exception(p.returncode.decode())
-            
-        if i == 3:
-            logger.info("DiagTrack: Successfully cleared and locked DiagTrack log.")
-        '''
-
 
 def delete_service(service):
     try:
@@ -317,7 +282,7 @@ def host_file(entries, undo):
     return False
 
 
-def app_manager(apps, undo):
+def app_manager(apps):
     running = {}
     for app in apps:
         cmd = 'powershell "Get-AppxPackage *{app}*|Remove-AppxPackage"'.format(app=app)
@@ -341,15 +306,3 @@ def subprocess_handler(cmd):
     output = p.communicate()
 
     return [p.returncode, output]
-
-# Old reinstall code, does not work:
-# if reinstall:
-#     # We encode in Base64 because the command is complex and I'm too lazy to escape everything.
-#     # It's uncoded format command: "Get-AppxPackage -AllUsers| Foreach {Add-AppxPackage -DisableDevelopmentMode
-#     # -Register "$($_.InstallLocation)\AppXManifest.xml"}"
-#     encodedcommand = 'Get-AppxPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode # -Register \
-#                      "$($_.InstallLocation)\AppXManifest.xml"}'
-#     try:
-#         subprocess.call("powershell -EncodedCommand {0}".format(encodedcommand), shell=True)
-#     except (WindowsError, IOError):
-#         print "App management: Could not re-install all apps"

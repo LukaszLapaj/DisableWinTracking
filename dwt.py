@@ -112,8 +112,7 @@ class MainPanel(wx.Panel):
         self.service_check.SetToolTip("Disables or deletes tracking services. Choose option in 'Services Method'")
 
         self.diagtrack_check = wx.CheckBox(self, label="Clear DiagTrack log")
-        self.diagtrack_check.SetToolTip("Clears Dianostic Tracking log and prevents modification to it. "
-                                        "Cannot be undone automatically.")
+        self.diagtrack_check.SetToolTip("Clears Dianostic Tracking log and prevents modification to it.")
 
         # Telemetry checkbox
         self.telemetry_check = wx.CheckBox(self, label="Telemetry")
@@ -133,13 +132,6 @@ class MainPanel(wx.Panel):
         self.ip_check = wx.CheckBox(self, label="Block tracking IP addresses")
         self.ip_check.SetToolTip("Blocks known tracking IP addresses with Windows Firewall.")
 
-        # Windows Privacy Regs (Policy Manager)
-        self.defender_check = wx.CheckBox(self, label="Windows Defender collection")
-        # self.defender_check.SetToolTip("Modifies registry to prevent Defender collection")
-        # Disable defender option until a solution is found.
-        self.defender_check.SetToolTip("Disable due to limitation set by windows kernel.")
-        self.defender_check.Enable(False)
-
         # WifiSense checkbox
         self.wifisense_check = wx.CheckBox(self, label="WifiSense")
 
@@ -156,71 +148,6 @@ class MainPanel(wx.Panel):
         self.mode_rad.SetItemToolTip(item=1, text="Reverts the selected settings.")
 
         go_button = wx.Button(self, label="Go!")
-
-        # Temporarily removed due to issues with not being able to restore apps properly
-        # This was honestly beyond the scope of the project to begin with and shouldn't have been implemented
-
-        '''self.app_box = wx.StaticBoxSizer(wx.VERTICAL, self, "Built-in Apps")
-        stat_box = self.app_box.GetStaticBox()
-        top_app_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        button_app_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        left_app_sizer = wx.BoxSizer(wx.VERTICAL)
-        middle_app_sizer = wx.BoxSizer(wx.VERTICAL)
-        right_app_sizer = wx.BoxSizer(wx.VERTICAL)
-
-        # wx.CheckBox(app_box.GetStaticBox(), label="Name", name="search_name")
-
-        wx.CheckBox(stat_box, label="3D Builder", name="3dbuilder")
-        wx.CheckBox(stat_box, label="Alarms && Clocks", name="windowsalarms")
-        wx.CheckBox(stat_box, label="Calendar and Mail", name="windowscommunicationsapps")
-        wx.CheckBox(stat_box, label="Camera", name="windowscamera")
-        wx.CheckBox(stat_box, label="Drawboard PDF", name="drawboardpdf")
-        wx.CheckBox(stat_box, label="Feedback Hub", name="windowsfeedbackhub")
-        wx.CheckBox(stat_box, label="Food && Drink", name="bingfoodanddrink")
-        wx.CheckBox(stat_box, label="Get Office App", name="officehub")
-        wx.CheckBox(stat_box, label="Get Skype App", name="skypeapp")
-        wx.CheckBox(stat_box, label="Get Started App", name="getstarted")
-        wx.CheckBox(stat_box, label="Groove Music", name="zunemusic")
-        wx.CheckBox(stat_box, label="Health && Fitness", name="binghealthandfitness")
-        wx.CheckBox(stat_box, label="Maps", name="windowsmaps")
-        wx.CheckBox(stat_box, label="Messaging", name="messaging")
-        wx.CheckBox(stat_box, label="Money", name="bingfinance")
-        wx.CheckBox(stat_box, label="Movies && TV", name="zunevideo")
-        wx.CheckBox(stat_box, label="News", name="bingnews")
-        wx.CheckBox(stat_box, label="OneNote App", name="onenote")
-        wx.CheckBox(stat_box, label="People", name="people")
-        wx.CheckBox(stat_box, label="Phone Companion", name="windowsphone")
-        wx.CheckBox(stat_box, label="Photos", name="photos")
-        wx.CheckBox(stat_box, label="Reader", name="reader")
-        wx.CheckBox(stat_box, label="Reading List", name="windowsreadinglist")
-        wx.CheckBox(stat_box, label="Solitaire Collection", name="solitairecollection")
-        wx.CheckBox(stat_box, label="Sports", name="bingsports")
-        wx.CheckBox(stat_box, label="Sticky Notes", name="microsoftstickynotes")
-        wx.CheckBox(stat_box, label="Sway App", name="sway")
-        wx.CheckBox(stat_box, label="Travel", name="bingtravel")
-        wx.CheckBox(stat_box, label="Voice Recorder", name="soundrecorder")
-        wx.CheckBox(stat_box, label="Weather", name="bingweather")
-        wx.CheckBox(stat_box, label="Xbox", name="xboxapp")
-        remove_app_button = wx.Button(stat_box, label="Remove selected apps")
-        select_all_check = wx.CheckBox(stat_box, label="Select all")
-
-        sorted_list = sorted(stat_box.GetChildren(), key=lambda x: x.GetLabel())
-        for index, item in enumerate([x for x in sorted_list if isinstance(x, wx.CheckBox) and x != select_all_check]):
-            n = len(sorted_list) // 3
-            if index <= n:
-                left_app_sizer.Add(item, 1, wx.ALL, 1)
-            elif index <= n * 2:
-                middle_app_sizer.Add(item, 1, wx.ALL, 1)
-            else:
-                right_app_sizer.Add(item, 1, wx.ALL, 1)
-
-        top_app_sizer.Add(left_app_sizer, 1, wx.ALL, 1)
-        top_app_sizer.Add(middle_app_sizer, 1, wx.ALL, 1)
-        top_app_sizer.Add(right_app_sizer, 1, wx.ALL, 1)
-        button_app_sizer.Add(remove_app_button, 0, wx.ALL, 1)
-        button_app_sizer.Add(select_all_check, 1, wx.ALL, 5)
-        self.app_box.Add(top_app_sizer)
-        self.app_box.Add(button_app_sizer)'''
 
         top_sizer = wx.BoxSizer(wx.VERTICAL)
         top_row_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -240,14 +167,12 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.extra_host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.ip_check, 0, wx.ALL, 1)
-        check_sizer.Add(self.defender_check, 0, wx.ALL, 1)
         check_sizer.Add(self.wifisense_check, 0, wx.ALL, 1)
         check_sizer.Add(self.onedrive_check, 0, wx.ALL, 1)
 
         # self.Bind(wx.EVT_CHECKBOX, handler=self.select_all_apps, source=select_all_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warn, source=self.ip_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.hosts_warn, source=self.extra_host_check)
-        # self.Bind(wx.EVT_BUTTON, handler=self.remove_apps, source=remove_app_button)
         self.Bind(wx.EVT_BUTTON, handler=self.go, source=go_button)
 
         self.SetSizer(top_sizer)
@@ -319,11 +244,6 @@ class MainPanel(wx.Panel):
                      " button and follow the directions"))
         console.Center()
         console.Show()
-
-    def remove_apps(self, event):
-        children = [child for child in self.app_box.GetStaticBox().GetChildren() if child.GetName() != "check"]
-        app_list = [child.GetName() for child in children if isinstance(child, wx.CheckBox) and child.IsChecked()]
-        dwt_util.app_manager(app_list, undo=False)
 
     def settings(self, event, silent=False):
         if silent == False:
@@ -479,7 +399,6 @@ def silent():
     dwt_util.disable_service("DiagTrack")
     dwt_util.services(0)
     dwt_util.telemetry(0)
-    # dwt_util.defender(0)
     dwt_util.wifisense(0)
     dwt_util.onedrive(0)
 
