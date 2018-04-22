@@ -36,6 +36,9 @@ class RedirectText(io.StringIO):
         self.out = console
         self.old_out = old_stdout
 
+        reload(sys)  # Reload does the trick!
+        sys.setdefaultencoding('UTF8')
+
     def write(self, string):
         # Oh my god this is the DUMBEST THING I've ever done. (Keeping a reference to the old stdout)
         self.old_out.write(string)
@@ -104,6 +107,7 @@ class MainPanel(wx.Panel):
         super(MainPanel, self).__init__(parent)
 
         self.parent = parent
+        self.unpicked_ads = []
         self.picked_normal = []
         self.picked_extra = []
         self.picked_ips = []
@@ -118,6 +122,10 @@ class MainPanel(wx.Panel):
         self.telemetry_check = wx.CheckBox(self, label="Telemetry")
         self.telemetry_check.SetToolTip("Sets 'AllowTelemetry' to 0. "
                                         "On non-Enterprise OS editions, requires HOSTS file modification.")
+
+        # Ad HOSTS file checkbox
+        self.ads_check = wx.CheckBox(self, label="Block ad domains")
+        self.ads_check.SetToolTip("Adds known ad domains to HOSTS file.")
 
         # HOSTS file checkbox
         self.host_check = wx.CheckBox(self, label="Block tracking domains")
@@ -169,6 +177,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.service_check, 0, wx.ALL, 1)
         check_sizer.Add(self.diagtrack_check, 0, wx.ALL, 1)
         check_sizer.Add(self.telemetry_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.ads_check, 0, wx.ALL, 1)
         check_sizer.Add(self.host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.extra_host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.flush_dns_check, 0, wx.ALL, 1)
@@ -216,7 +225,7 @@ class MainPanel(wx.Panel):
             warn.Destroy()
 
     def go(self, event):
-        if not all((self.picked_ips, self.picked_extra, self.picked_normal)):
+        if not all((self.unpicked_ads, self.picked_ips, self.picked_extra, self.picked_normal)):
             self.settings(event=None)
 
         undo = bool(self.mode_rad.GetSelection())
@@ -235,6 +244,8 @@ class MainPanel(wx.Panel):
             dwt_util.services(undo=undo)
         if self.telemetry_check.IsChecked():
             dwt_util.telemetry(undo=undo)
+        if self.ads_check.IsChecked():
+            dwt_util.hosts_ad_removal(self.unpicked_ads, undo=undo)
         if self.host_check.IsChecked():
             dwt_util.host_file(self.picked_normal, undo=undo)
         if self.extra_host_check.IsChecked():
@@ -304,6 +315,11 @@ class MainPanel(wx.Panel):
             '137.116.81.24', '157.56.106.189', '204.79.197.200', '65.52.108.33', '64.4.54.254'
         )
 
+        adblock_whitelist = (
+            'clickserve.dartsearch.net', 'tc.tradetracker.net', 'www.googleadservices.com', 'googleadservices.com',
+            'ad.doubleclick.net'
+        )
+
         normal_domain_picker = ItemsPicker(dialog, choices=[], selectedLabel="Domains to be blocked",
                                            ipStyle=IP_SORT_SELECTED | IP_SORT_CHOICES | IP_REMOVE_FROM_CHOICES)
         if self.picked_normal:
@@ -328,8 +344,17 @@ class MainPanel(wx.Panel):
         else:
             ip_picker.SetSelections(ip_addresses)
 
+        whitelist_picker = ItemsPicker(dialog, choices=[], selectedLabel="Domains to be whitelisted",
+                                       ipStyle=IP_SORT_SELECTED | IP_SORT_CHOICES | IP_REMOVE_FROM_CHOICES)
+        if self.unpicked_ads:
+            whitelist_picker.SetSelections(self.unpicked_ads)
+            whitelist_picker.SetItems([domain for domain in adblock_whitelist if domain not in self.unpicked_ads])
+        else:
+            whitelist_picker.SetSelections(adblock_whitelist)
+
         if silent == False:
             sizer.Add(normal_domain_picker, 0, wx.EXPAND)
+            sizer.Add(whitelist_picker, 0, wx.EXPAND)
             sizer.Add(extra_domain_picker, 0, wx.EXPAND)
             sizer.Add(ip_picker, 0, wx.EXPAND)
             if event is not None:
@@ -338,6 +363,7 @@ class MainPanel(wx.Panel):
                 dialog.ShowModal()
             dialog.Destroy()
 
+        self.unpicked_ads = whitelist_picker.GetSelections()
         self.picked_normal = normal_domain_picker.GetSelections()
         self.picked_extra = extra_domain_picker.GetSelections()
         self.picked_ips = ip_picker.GetSelections()

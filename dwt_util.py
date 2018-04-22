@@ -21,6 +21,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+import urllib
 from string import split
 
 import pywintypes
@@ -253,6 +254,33 @@ def set_registry(keys):
             logger.info("Registry: Successfully modified {key} key.".format(key=key_name))
         except OSError:
             logger.exception("Registry: Unable to modify {key} key.".format(key=key_name))
+
+
+def hosts_ad_removal(entries, undo):
+    urllib.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
+    # urllib.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")
+    null_ip = "0.0.0.0 "
+    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
+    nulled_entries = [null_ip + x for x in entries]
+    if not undo:
+        try:
+            with open('hosts.txt') as hosts, tempfile.NamedTemporaryFile(delete=False) as temp:
+                for line in hosts:
+                    if not any(domain in line for domain in nulled_entries):
+                        temp.write(line)
+                temp.close()
+                shutil.move(temp.name, hosts_path)
+            return True
+        except OSError:
+            logger.exception("Hosts: Failed to modify hosts file")
+    else:
+        try:
+            with open(hosts_path, 'a') as f:
+                f.write('\n' + '\n'.join(nulled_entries))
+            return True
+        except (WindowsError, IOError):
+            logger.exception("Hosts: Failed to undo hosts file")
+    return False
 
 
 def host_file(entries, undo):
