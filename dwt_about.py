@@ -18,9 +18,9 @@
 # dwt.py will become cluttered enough :^)
 import cgi
 import json
-import urllib2
 import webbrowser
 from distutils.version import StrictVersion
+from urllib import request
 
 import wx
 import wx.adv
@@ -168,8 +168,8 @@ class Licenses(wx.Dialog):
 
 def update_check(parent):
     try:
-        r = urllib2.urlopen('https://api.github.com/repos/10se1ucgo/DisableWinTracking/releases/latest')
-    except urllib2.URLError:
+        r = request.urlopen('https://api.github.com/repos/10se1ucgo/DisableWinTracking/releases/latest')
+    except request.URLError:
         return
     value, parameters = cgi.parse_header(r.headers.get('Content-Type', ''))
     release = json.loads(r.read().decode(parameters.get('charset', 'utf-8')))

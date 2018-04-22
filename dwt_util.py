@@ -14,15 +14,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with DisableWinTracking.  If not, see <http://www.gnu.org/licenses/>.
-import _winreg as winreg
 import logging
 import os
 import shlex
 import shutil
 import subprocess
 import tempfile
-import urllib
-from string import split
+import urllib.error
+import urllib.parse
+import urllib.request
+import winreg
 
 import pywintypes
 import win32serviceutil
@@ -103,7 +104,7 @@ def clear_diagtrack():
     failed = False
     for cmd in cmds:
         i += 1
-        service = split(cmd, 'sc delete ')
+        service = shlex.split(cmd, 'sc delete ')
 
         output = subprocess_handler(cmd)
         if output[0] in [0, 1060, 1072]:
@@ -257,14 +258,14 @@ def set_registry(keys):
 
 
 def hosts_ad_removal(entries, undo):
-    urllib.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
-    # urllib.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")
+    urllib.request.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
+    # urllib.request.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")
     null_ip = "0.0.0.0 "
     hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
     nulled_entries = [null_ip + x for x in entries]
     if not undo:
         try:
-            with open('hosts.txt') as hosts, tempfile.NamedTemporaryFile(delete=False) as temp:
+            with open('hosts.txt', 'r') as hosts, tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
                 for line in hosts:
                     if not any(domain in line for domain in nulled_entries):
                         temp.write(line)

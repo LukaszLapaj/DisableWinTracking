@@ -36,8 +36,8 @@ class RedirectText(io.StringIO):
         self.out = console
         self.old_out = old_stdout
 
-        reload(sys)  # Reload does the trick!
-        sys.setdefaultencoding('UTF8')
+        # reload(sys)  # Reload does the trick!
+        # sys.setdefaultencoding('UTF8')
 
     def write(self, string):
         # Oh my god this is the DUMBEST THING I've ever done. (Keeping a reference to the old stdout)
@@ -419,11 +419,11 @@ def exception_hook(error, value, trace):
 def check_elevated(silent=False):
     if not bool(windll.advpack.IsNTAdmin(0, None)):
         if silent:
-            windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable),
-                                         u"{0} -silent".format(unicode(__file__)), None, 1)
+            windll.shell32.ShellExecuteW(None, "runas", str(sys.executable),
+                                         "{0} -silent".format(str(__file__)), None, 1)
             sys.exit(1)
         else:
-            windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable), unicode(__file__), None, 1)
+            windll.shell32.ShellExecuteW(None, "runas", str(sys.executable), str(__file__), None, 1)
         sys.exit(1)
 
 
