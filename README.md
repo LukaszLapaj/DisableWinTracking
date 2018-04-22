@@ -2,8 +2,7 @@
 
 A tool that I created to use some of the known methods of disabling tracking in Windows 10.
 
-<!-- ![screenshot](https://i.imgur.com/qfC2elN.png) -->
-![screenshot](http://i.imgur.com/WINUxAj.png)
+<img src="screenshots/win10.png" width="440">
 
 ## CYRILLIC LANGUAGES WARNING
 
@@ -19,7 +18,7 @@ This program cannot run correctly from a file path that contains Cyrillic charac
 
 ## DOWNLOAD
 
-[DOWNLOAD EXE HERE](https://github.com/10se1ucgo/DisableWinTracking/releases/)
+[DOWNLOAD EXE HERE](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
 
 **Note:** Windows Defender may report the EXE as a trojan (Win32/Pocyx.C!cl), and may therefore prevent you from extracting the EXE to anywhere on your computer. Set up an exclusion in **Settings > Update & Security > Windows Defender > Exclusions** by adding the folder you intend to extract the EXE to.
 
@@ -27,7 +26,7 @@ This program cannot run correctly from a file path that contains Cyrillic charac
 
 You can either:
 
-A. [Run the binary uploaded to the Release tab as an Administrator and select which options you'd like](https://github.com/10se1ucgo/DisableWinTracking/releases/)
+A. [Run the binary uploaded to the Release tab as an Administrator and select which options you'd like](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
 
 B. Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like  
 
@@ -38,8 +37,8 @@ Either can be run with the -silent argument as of v3.1. This will perform all av
 **You still need to run it as administrator.**
 
 ## Dependencies
-This is only to run the script from source, [download the exe here](https://github.com/10se1ucgo/DisableWinTracking/releases/)
-* Tested on Python 2.7
+This is only to run the script from source, [download the exe here](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
+* Tested on Python 3.6
 * [wxPython](http://wxpython.org/download.php) -- GUI (Tested with wxPython=Phoenix)
 * [PyWin32](http://sourceforge.net/projects/pywin32/files/pywin32/)
 * Windows 10 (Duh)
@@ -66,18 +65,12 @@ Action:
 
 #### HOSTS
 
-Append known tracking domains to the `HOSTS` file located in `C:\Windows\System32\drivers\etc`
+Append known tracking and ad domains to the `HOSTS` file located in `C:\Windows\System32\drivers\etc`
 
 #### IP Blocking
 
 Blocks known tracking IPs with the Windows Firewall. The rules are named TrackingIPX, replacing X with the IP numbers.
 
-#### Windows Defender
-
-Disables the following:
-- Automatic Sample Submission
-- Delivery Optimization Download Mode
- 
 #### WifiSense
 Disables the following:
 - Credential Share
@@ -89,7 +82,7 @@ Runs `C:\Windows\SysWOW64\OneDriveSetup.exe /uninstall` (64 bit) or
 `C:\Windows\System32\OneDriveSetup.exe /uninstall` (32 bit)
 
 Also disables registry entries that keep the OneDrive Icon pinned to your Windows Explorer list:
-![OneDrive Example Image](http://i.imgur.com/26yfnGD.png)
+<img src="http://i.imgur.com/26yfnGD.png" width="440">
 
 ## Delete Services vs Disable Services?
 
@@ -100,6 +93,7 @@ Selecting the "Delete" choice will completely delete the tracking services.
 
 ```
 Copyright (C) 10se1ucgo 2016
+Copyright (C) lukaszlapaj 2018
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
