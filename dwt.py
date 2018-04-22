@@ -275,11 +275,9 @@ class MainPanel(wx.Panel):
             'lb1.www.ms.akadns.net', 'live.rads.msn.com', 'm.adnxs.com', 'msedge.net', 'msftncsi.com',
             'msnbot-65-55-108-23.search.msn.com', 'msntest.serving-sys.com', 'oca.telemetry.microsoft.com',
             'oca.telemetry.microsoft.com.nsatc.net', 'pre.footprintpredict.com', 'preview.msn.com',
-            'rad.live.com', 'rad.msn.com', 'redir.metaservices.microsoft.com',
-            'reports.wes.df.telemetry.microsoft.com', 'schemas.microsoft.akadns.net',
-            'secure.adnxs.com', 'secure.flashtalking.com', 'services.wes.df.telemetry.microsoft.com',
-            'settings-sandbox.data.microsoft.com', 'settings-win.data.microsoft.com',
-            'sls.update.microsoft.com.akadns.net', 'sqm.df.telemetry.microsoft.com',
+            'rad.live.com', 'rad.msn.com', 'redir.metaservices.microsoft.com', 'schemas.microsoft.akadns.net',
+            'secure.adnxs.com', 'secure.flashtalking.com', 'settings-sandbox.data.microsoft.com',
+            'settings-win.data.microsoft.com', 'sls.update.microsoft.com.akadns.net', 'sqm.df.telemetry.microsoft.com',
             'sqm.telemetry.microsoft.com', 'sqm.telemetry.microsoft.com.nsatc.net', 'ssw.live.com',
             'static.2mdn.net', 'statsfe1.ws.microsoft.com', 'statsfe2.ws.microsoft.com',
             'telecommand.telemetry.microsoft.com', 'telecommand.telemetry.microsoft.com.nsatc.net',
@@ -288,14 +286,16 @@ class MainPanel(wx.Panel):
             'vortex-cy2.metron.live.com.nsatc.net', 'vortex-sandbox.data.microsoft.com',
             'vortex-win.data.metron.live.com.nsatc.net', 'vortex-win.data.microsoft.com',
             'vortex.data.glbdns2.microsoft.com', 'vortex.data.microsoft.com', 'watson.live.com',
-            'web.vortex.data.microsoft.com', 'www.msftncsi.com'
+            'web.vortex.data.microsoft.com', 'www.msftncsi.com',
+
+            'fe2.update.microsoft.com.akadns.net', 'view.atdmt.com', 'watson.telemetry.microsoft.com',
+            'watson.telemetry.microsoft.com.nsatc.net', 'reports.wes.df.telemetry.microsoft.com',
+            'services.wes.df.telemetry.microsoft.com', 'wes.df.telemetry.microsoft.com'
         )
 
         extra_domains = (
-            'fe2.update.microsoft.com.akadns.net', 's0.2mdn.net', 'statsfe2.update.microsoft.com.akadns.net',
-            'survey.watson.microsoft.com', 'view.atdmt.com', 'watson.microsoft.com',
-            'watson.ppe.telemetry.microsoft.com', 'watson.telemetry.microsoft.com',
-            'watson.telemetry.microsoft.com.nsatc.net', 'wes.df.telemetry.microsoft.com', 'ui.skype.com',
+            's0.2mdn.net', 'statsfe2.update.microsoft.com.akadns.net', 'survey.watson.microsoft.com',
+            'watson.microsoft.com', 'watson.ppe.telemetry.microsoft.com', 'ui.skype.com',
             'pricelist.skype.com', 'apps.skype.com', 'm.hotmail.com', 's.gateway.messenger.live.com'
         )
 
