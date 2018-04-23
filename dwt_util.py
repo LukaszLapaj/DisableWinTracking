@@ -258,14 +258,16 @@ def set_registry(keys):
 def hosts_ad_removal(entries, undo):
     urllib.request.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
     # urllib.request.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")
-    null_ip = "0.0.0.0 "
-    nulled_entries = [null_ip + x for x in entries]
+    null_ip = "0.0.0.0"
+    www = "www."
+    all_entries = [(null_ip + " ") + x for x in entries] + [(null_ip + " " + www) + x for x in entries]
     hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
     if undo:
         try:
             with open(hosts_path, 'a') as f:
-                f.write('\n' + '\n'.join(nulled_entries))
+                f.write('\n' + '\n'.join(all_entries))
             os.remove('hosts.txt')
+            logger.info("Hosts: Successfully reverted adblocking")
             return True
         except (WindowsError, IOError):
             logger.exception("Hosts: Failed to undo hosts file")
@@ -273,20 +275,21 @@ def hosts_ad_removal(entries, undo):
         try:
             with open('hosts.txt', 'r') as hosts, tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
                 for line in hosts:
-                    if not any(domain in line for domain in nulled_entries):
+                    if not any(domain in line for domain in all_entries):
                         temp.write(line)
                 temp.close()
                 shutil.move(temp.name, hosts_path)
             os.remove('hosts.txt')
+            logger.info("Hosts: Successfully removed ads")
             return True
         except OSError:
             logger.exception("Hosts: Failed to modify hosts file")
     return False
 
 
-def host_tracking_removal(entries, undo):
-    null_ip = "0.0.0.0 "
-    nulled_entires = [null_ip + x for x in entries]
+def hosts_tracking_removal(entries, undo):
+    null_ip = "0.0.0.0"
+    nulled_entries = [(null_ip + " ") + x for x in entries]
     hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
     if undo:
         try:
@@ -296,13 +299,15 @@ def host_tracking_removal(entries, undo):
                         temp.write(line)
                 temp.close()
                 shutil.move(temp.name, hosts_path)
+            logger.info("Hosts: Successfully enabled tracking")
             return True
         except OSError:
             logger.exception("Hosts: Failed to undo hosts file")
     else:
         try:
             with open(hosts_path, 'a') as f:
-                f.write('\n' + '\n'.join(nulled_entires))
+                f.write('\n' + '\n'.join(nulled_entries))
+            logger.info("Hosts: Successfully disabled tracking")
             return True
         except (WindowsError, IOError):
             logger.exception("Hosts: Failed to modify hosts file")
@@ -338,3 +343,10 @@ def subprocess_handler(cmd):
     output = p.communicate()
 
     return [p.returncode, output]
+
+
+def log_cleanup():
+    try:
+        os.remove('dwt.log')
+    except (OSError, IOError):
+        logger.exception("Could not remove log file.")

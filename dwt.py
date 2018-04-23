@@ -30,14 +30,11 @@ import dwt_util
 
 
 class RedirectText(io.StringIO):
-    def __init__(self, console, old_stdout):
+    def __init__(self, console_window, old_stdout):
         super(RedirectText, self).__init__()
-
-        self.out = console
+        self.out = console_window
         self.old_out = old_stdout
-
-        # reload(sys)  # Reload does the trick!
-        # sys.setdefaultencoding('UTF8')
+        # dwt_util.log_cleanup()
 
     def write(self, string):
         # Oh my god this is the DUMBEST THING I've ever done. (Keeping a reference to the old stdout)
@@ -83,6 +80,7 @@ class MainFrame(wx.Frame):
 
         file_menu = wx.Menu()
         settings = file_menu.Append(wx.ID_SETUP, "&Settings", "DWT settings")
+        # file_menu.SetBackgroundColour(wx.SYS_COLOUR_MENU)
 
         help_menu = wx.Menu()
         # about = help_menu.Append(wx.ID_ABOUT, "&About", "About DWT")
@@ -197,11 +195,11 @@ class MainPanel(wx.Panel):
 
         self.SetSizer(top_sizer)
 
-    def select_all_apps(self, event):
-        # Iters through all children of the wxStaticBox of the wxStaticBoxSizer and checks/un checks all wxCheckBoxes.
-        for child in self.app_box.GetStaticBox().GetChildren():
-            if isinstance(child, wx.CheckBox):
-                child.SetValue(event.IsChecked())
+    # def select_all_apps(self, event):
+    #     Iterates through all children of the wxStaticBox of the wxStaticBoxSizer and checks/unchecks all wxCheckBoxes.
+    #     for child in self.app_box.GetStaticBox().GetChildren():
+    #         if isinstance(child, wx.CheckBox):
+    #             child.SetValue(event.IsChecked())
 
     def ip_warn(self, event):
         # Warn users about the potential side effects of the IP blocking firewall rules
@@ -252,9 +250,9 @@ class MainPanel(wx.Panel):
         if self.ads_check.IsChecked():
             dwt_util.hosts_ad_removal(self.unpicked_ads, undo=undo)
         if self.host_check.IsChecked():
-            dwt_util.host_tracking_removal(self.picked_normal, undo=undo)
+            dwt_util.hosts_tracking_removal(self.picked_normal, undo=undo)
         if self.extra_host_check.IsChecked():
-            dwt_util.host_tracking_removal(self.picked_extra, undo=undo)
+            dwt_util.hosts_tracking_removal(self.picked_extra, undo=undo)
         if self.flush_dns_check.IsChecked():
             dwt_util.flush_dns()
         if self.wifisense_check.IsChecked():
@@ -262,66 +260,14 @@ class MainPanel(wx.Panel):
         if self.onedrive_check.IsChecked():
             dwt_util.onedrive(undo=undo)
         logger.info("Done. It's recommended that you reboot as soon as possible for the full effect.")
-        logger.info(("If you feel something didn't work properly, please press the 'Report an issue'"
-                     " button and follow the directions"))
+        logger.info("If you feel something didn't work properly, please press the 'Report an issue'")
         console.Center()
         console.Show()
 
     def settings(self, event, silent=False):
-        if silent == False:
+        if not silent:
             dialog = wx.Dialog(parent=self, title="Settings", style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
             sizer = wx.BoxSizer(wx.VERTICAL)
-
-        normal_domains = (
-            'a-0001.a-msedge.net', 'a-0002.a-msedge.net', 'a-0003.a-msedge.net', 'a-0004.a-msedge.net',
-            'a-0005.a-msedge.net', 'a-0006.a-msedge.net', 'a-0007.a-msedge.net', 'a-0008.a-msedge.net',
-            'a-0009.a-msedge.net', 'a-msedge.net', 'a.ads1.msn.com', 'a.ads2.msads.net', 'a.ads2.msn.com',
-            'a.rad.msn.com', 'ac3.msn.com', 'ad.doubleclick.net', 'adnexus.net', 'adnxs.com', 'ads.msn.com',
-            'ads1.msads.net', 'ads1.msn.com', 'aidps.atdmt.com', 'aka-cdn-ns.adtech.de',
-            'az361816.vo.msecnd.net', 'az512334.vo.msecnd.net', 'b.ads1.msn.com', 'b.ads2.msads.net',
-            'b.rad.msn.com', 'bs.serving-sys.com', 'c.atdmt.com', 'c.msn.com', 'cdn.atdmt.com',
-            'cds26.ams9.msecn.net', 'choice.microsoft.com', 'choice.microsoft.com.nsatc.net',
-            'compatexchange.cloudapp.net', 'corp.sts.microsoft.com', 'corpext.msitadfs.glbdns2.microsoft.com',
-            'cs1.wpc.v0cdn.net', 'db3aqu.atdmt.com', 'df.telemetry.microsoft.com',
-            'diagnostics.support.microsoft.com', 'ec.atdmt.com', 'feedback.microsoft-hohm.com',
-            'feedback.search.microsoft.com', 'feedback.windows.com', 'flex.msn.com', 'g.msn.com', 'h1.msn.com',
-            'i1.services.social.microsoft.com', 'i1.services.social.microsoft.com.nsatc.net',
-            'lb1.www.ms.akadns.net', 'live.rads.msn.com', 'm.adnxs.com', 'msedge.net', 'msftncsi.com',
-            'msnbot-65-55-108-23.search.msn.com', 'msntest.serving-sys.com', 'oca.telemetry.microsoft.com',
-            'oca.telemetry.microsoft.com.nsatc.net', 'pre.footprintpredict.com', 'preview.msn.com',
-            'rad.live.com', 'rad.msn.com', 'redir.metaservices.microsoft.com', 'schemas.microsoft.akadns.net',
-            'secure.adnxs.com', 'secure.flashtalking.com', 'settings-sandbox.data.microsoft.com',
-            'settings-win.data.microsoft.com', 'sls.update.microsoft.com.akadns.net', 'sqm.df.telemetry.microsoft.com',
-            'sqm.telemetry.microsoft.com', 'sqm.telemetry.microsoft.com.nsatc.net', 'ssw.live.com',
-            'static.2mdn.net', 'statsfe1.ws.microsoft.com', 'statsfe2.ws.microsoft.com',
-            'telecommand.telemetry.microsoft.com', 'telecommand.telemetry.microsoft.com.nsatc.net',
-            'telemetry.appex.bing.net', 'telemetry.microsoft.com', 'telemetry.urs.microsoft.com',
-            'v10.vortex-win.data.microsoft.com', 'vortex-bn2.metron.live.com.nsatc.net',
-            'vortex-cy2.metron.live.com.nsatc.net', 'vortex-sandbox.data.microsoft.com',
-            'vortex-win.data.metron.live.com.nsatc.net', 'vortex-win.data.microsoft.com',
-            'vortex.data.glbdns2.microsoft.com', 'vortex.data.microsoft.com', 'watson.live.com',
-            'web.vortex.data.microsoft.com', 'www.msftncsi.com',
-
-            'fe2.update.microsoft.com.akadns.net', 'view.atdmt.com', 'watson.telemetry.microsoft.com',
-            'watson.telemetry.microsoft.com.nsatc.net', 'reports.wes.df.telemetry.microsoft.com',
-            'services.wes.df.telemetry.microsoft.com', 'wes.df.telemetry.microsoft.com'
-        )
-
-        extra_domains = (
-            's0.2mdn.net', 'statsfe2.update.microsoft.com.akadns.net', 'survey.watson.microsoft.com',
-            'watson.microsoft.com', 'watson.ppe.telemetry.microsoft.com', 'ui.skype.com',
-            'pricelist.skype.com', 'apps.skype.com', 'm.hotmail.com', 's.gateway.messenger.live.com'
-        )
-
-        ip_addresses = (
-            '2.22.61.43', '2.22.61.66', '65.39.117.230', '65.55.108.23', '23.218.212.69', '134.170.30.202',
-            '137.116.81.24', '157.56.106.189', '204.79.197.200', '65.52.108.33', '64.4.54.254'
-        )
-
-        adblock_whitelist = (
-            'clickserve.dartsearch.net', 'tc.tradetracker.net', 'www.googleadservices.com', 'googleadservices.com',
-            'ad.doubleclick.net', 'ojrq.net', 'clkuk.tradedoubler.com', 'tracking.publicidees.com'
-        )
 
         normal_domain_picker = ItemsPicker(dialog, choices=[], selectedLabel="Domains to be blocked",
                                            ipStyle=IP_SORT_SELECTED | IP_SORT_CHOICES | IP_REMOVE_FROM_CHOICES)
@@ -355,7 +301,7 @@ class MainPanel(wx.Panel):
         else:
             whitelist_picker.SetSelections(adblock_whitelist)
 
-        if silent == False:
+        if not silent:
             sizer.Add(normal_domain_picker, 0, wx.EXPAND)
             sizer.Add(whitelist_picker, 0, wx.EXPAND)
             sizer.Add(extra_domain_picker, 0, wx.EXPAND)
@@ -430,7 +376,6 @@ def check_elevated(silent=False):
 def silent():
     setup_logging()
     check_elevated(True)
-
     dwt_util.clear_diagtrack()
     dwt_util.disable_service("dmwappushsvc")
     dwt_util.disable_service("DiagTrack")
@@ -438,19 +383,85 @@ def silent():
     dwt_util.telemetry(0)
     dwt_util.wifisense(0)
     dwt_util.onedrive(0)
+    logger.info("COMPLETE")
 
+
+def silent_default():
+    setup_logging()
+    check_elevated(True)
+    dwt_util.clear_diagtrack()
+    dwt_util.disable_service("dmwappushsvc")
+    dwt_util.disable_service("DiagTrack")
+    dwt_util.services(0)
+    dwt_util.telemetry(0)
+    dwt_util.hosts_ad_removal(adblock_whitelist, undo=0)
+    dwt_util.hosts_tracking_removal(normal_domains, undo=0)
     logger.info("COMPLETE")
 
 
 if __name__ == '__main__':
-    if '-silent' in sys.argv:
+    normal_domains = (
+        'a-0001.a-msedge.net', 'a-0002.a-msedge.net', 'a-0003.a-msedge.net', 'a-0004.a-msedge.net',
+        'a-0005.a-msedge.net', 'a-0006.a-msedge.net', 'a-0007.a-msedge.net', 'a-0008.a-msedge.net',
+        'a-0009.a-msedge.net', 'a-msedge.net', 'a.ads1.msn.com', 'a.ads2.msads.net', 'a.ads2.msn.com',
+        'a.rad.msn.com', 'ac3.msn.com', 'ad.doubleclick.net', 'adnexus.net', 'adnxs.com', 'ads.msn.com',
+        'ads1.msads.net', 'ads1.msn.com', 'aidps.atdmt.com', 'aka-cdn-ns.adtech.de',
+        'az361816.vo.msecnd.net', 'az512334.vo.msecnd.net', 'b.ads1.msn.com', 'b.ads2.msads.net',
+        'b.rad.msn.com', 'bs.serving-sys.com', 'c.atdmt.com', 'c.msn.com', 'cdn.atdmt.com',
+        'cds26.ams9.msecn.net', 'choice.microsoft.com', 'choice.microsoft.com.nsatc.net',
+        'compatexchange.cloudapp.net', 'corp.sts.microsoft.com', 'corpext.msitadfs.glbdns2.microsoft.com',
+        'cs1.wpc.v0cdn.net', 'db3aqu.atdmt.com', 'df.telemetry.microsoft.com',
+        'diagnostics.support.microsoft.com', 'ec.atdmt.com', 'feedback.microsoft-hohm.com',
+        'feedback.search.microsoft.com', 'feedback.windows.com', 'flex.msn.com', 'g.msn.com', 'h1.msn.com',
+        'i1.services.social.microsoft.com', 'i1.services.social.microsoft.com.nsatc.net',
+        'lb1.www.ms.akadns.net', 'live.rads.msn.com', 'm.adnxs.com', 'msedge.net', 'msftncsi.com',
+        'msnbot-65-55-108-23.search.msn.com', 'msntest.serving-sys.com', 'oca.telemetry.microsoft.com',
+        'oca.telemetry.microsoft.com.nsatc.net', 'pre.footprintpredict.com', 'preview.msn.com',
+        'rad.live.com', 'rad.msn.com', 'redir.metaservices.microsoft.com', 'schemas.microsoft.akadns.net',
+        'secure.adnxs.com', 'secure.flashtalking.com', 'settings-sandbox.data.microsoft.com',
+        'settings-win.data.microsoft.com', 'sls.update.microsoft.com.akadns.net', 'sqm.df.telemetry.microsoft.com',
+        'sqm.telemetry.microsoft.com', 'sqm.telemetry.microsoft.com.nsatc.net', 'ssw.live.com',
+        'static.2mdn.net', 'statsfe1.ws.microsoft.com', 'statsfe2.ws.microsoft.com',
+        'telecommand.telemetry.microsoft.com', 'telecommand.telemetry.microsoft.com.nsatc.net',
+        'telemetry.appex.bing.net', 'telemetry.microsoft.com', 'telemetry.urs.microsoft.com',
+        'v10.vortex-win.data.microsoft.com', 'vortex-bn2.metron.live.com.nsatc.net',
+        'vortex-cy2.metron.live.com.nsatc.net', 'vortex-sandbox.data.microsoft.com',
+        'vortex-win.data.metron.live.com.nsatc.net', 'vortex-win.data.microsoft.com',
+        'vortex.data.glbdns2.microsoft.com', 'vortex.data.microsoft.com', 'watson.live.com',
+        'web.vortex.data.microsoft.com', 'www.msftncsi.com',
+
+        'fe2.update.microsoft.com.akadns.net', 'view.atdmt.com', 'watson.telemetry.microsoft.com',
+        'watson.telemetry.microsoft.com.nsatc.net', 'reports.wes.df.telemetry.microsoft.com',
+        'services.wes.df.telemetry.microsoft.com', 'wes.df.telemetry.microsoft.com'
+    )
+
+    extra_domains = (
+        's0.2mdn.net', 'statsfe2.update.microsoft.com.akadns.net', 'survey.watson.microsoft.com',
+        'watson.microsoft.com', 'watson.ppe.telemetry.microsoft.com', 'ui.skype.com',
+        'pricelist.skype.com', 'apps.skype.com', 'm.hotmail.com', 's.gateway.messenger.live.com'
+    )
+
+    ip_addresses = (
+        '2.22.61.43', '2.22.61.66', '65.39.117.230', '65.55.108.23', '23.218.212.69', '134.170.30.202',
+        '137.116.81.24', '157.56.106.189', '204.79.197.200', '65.52.108.33', '64.4.54.254'
+    )
+
+    adblock_whitelist = (
+        'clickserve.dartsearch.net', 'tc.tradetracker.net', 'googleadservices.com',
+        'ad.doubleclick.net', 'ojrq.net', 'clkuk.tradedoubler.com', 'tracking.publicidees.com'
+    )
+
+    if '-S' in sys.argv:
         silent()
+        sys.exit(0)
+    if '-H' in sys.argv:
+        silent_default()
         sys.exit(0)
     wx_app = wx.App()
     frame = MainFrame()
     console = ConsoleDialog(sys.stdout)
     setup_logging()
     sys.excepthook = exception_hook
-    #dwt_about.update_check(None)
+    # dwt_about.update_check(None)
     frame.Show()
     wx_app.MainLoop()

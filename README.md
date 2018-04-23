@@ -1,8 +1,8 @@
 # DisableWinTracking
 
-### A tool that use some of the known methods of disabling tracking and implementing adblock in Windows 10.
+A tool that use some of the known methods of disabling tracking and implementing adblock in Windows 10.
 
-<img src="screenshots/win10.png" width="445">
+<img src="screenshots/win10.png" width="450">
 
 ## Download
 
@@ -14,15 +14,15 @@
 
 You can either:
 
-**A)** Run the [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) uploaded to the repository as an Administrator and select which options you'd like
+**A)** Run the [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) uploaded to the repository as an Administrator and select which options you'd like.
 
-**B)** Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like  
+**B)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-S` argument. This will perform all available options of the version you're using, excluding any hosts modifications.
 
-**You still need to run it as administrator.**
+**C)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-D` argument. This will perform all default options, inluding hosts modifications.
 
-#### Silent
+**D)** Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like.
 
-Either can be run with the -silent argument. This will perform all available options of the version you're using, excluding any hosts file modifications.
+**You always need to run it as an administrator.**
 
 ## Dependencies
 This is only to run the script from source, [download the exe here](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
@@ -51,7 +51,7 @@ Action:
 * Delete: Remove both services
 * Disable: Set the `Start` registry key for both services to `4` (Disabled) Located at `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\`
 
-#### HOSTS
+#### Hosts
 
 Append known tracking and ad domains to the `HOSTS` file located in `C:\Windows\System32\drivers\etc`
 
@@ -70,7 +70,7 @@ Runs `C:\Windows\SysWOW64\OneDriveSetup.exe /uninstall` (64 bit) or
 `C:\Windows\System32\OneDriveSetup.exe /uninstall` (32 bit)
 
 Also disables registry entries that keep the OneDrive Icon pinned to your Windows Explorer list:
-<img src="http://i.imgur.com/26yfnGD.png" width="500">
+<img src="screenshots/onedrive.png" width="500">
 
 ## Delete Services vs Disable Services
 
