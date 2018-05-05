@@ -322,6 +322,39 @@ def hosts_tracking_removal(entries, undo):
     return False
 
 
+def windows_update(undo):
+    if undo:
+        try:
+            os.system('sc config BITS start=auto > NUL')
+            os.system('sc config DoSvc start=auto > NUL')
+            os.system('sc config wuauserv start=auto > NUL')
+            os.system('sc config UsoSvc start=auto > NUL')
+            os.system('net start BITS > NUL')
+            os.system('net start DoSvc > NUL')
+            os.system('net start wuauserv > NUL')
+            os.system('net start UsoSvc > NUL')
+            os.system('wuauclt /updatenow > NUL')
+            logger.info("Windows Update: Updates are now enabled")
+            return True
+        except OSError:
+            logger.exception("Windows Update: Failed to enable updates")
+    else:
+        try:
+            os.system('sc config BITS start=disabled > NUL')
+            os.system('sc config DoSvc start=disabled > NUL')
+            os.system('sc config wuauserv start=disabled > NUL')
+            os.system('sc config UsoSvc start=disabled > NUL')
+            os.system('net stop BITS > NUL')
+            os.system('net stop DoSvc > NUL')
+            os.system('net stop wuauserv > NUL')
+            os.system('net stop UsoSvc > NUL')
+            logger.info("Windows Update: Updates are now disabled")
+            return True
+        except OSError:
+            logger.exception("Windows Update: Failed to disable updates")
+    return False
+
+
 def flush_dns():
     os.system('ipconfig /flushdns > NUL')
 

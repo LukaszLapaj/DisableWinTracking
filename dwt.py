@@ -160,6 +160,10 @@ class MainPanel(wx.Panel):
         self.onedrive_check.SetToolTip("Uninstalls OneDrive from your computer and removes it from Explorer.")
 
         self.service_rad = wx.RadioBox(self, label="Service Method", choices=("Disable", "Delete"))
+        # Windows Update checkbox
+        self.windows_update_check = wx.CheckBox(self, label="Disable Windows Update")
+        self.windows_update_check.SetToolTip("")
+
         self.service_rad.SetItemToolTip(item=0, text="Simply disables the services. This can be undone.")
         self.service_rad.SetItemToolTip(item=1, text="Deletes the services completely. This can't be undone.")
 
@@ -192,6 +196,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.ip_check, 0, wx.ALL, 1)
         check_sizer.Add(self.wifisense_check, 0, wx.ALL, 1)
         check_sizer.Add(self.onedrive_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.windows_update_check, 0, wx.ALL, 1)
 
         # self.Bind(wx.EVT_CHECKBOX, handler=self.select_all_apps, source=select_all_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warn, source=self.ip_check)
@@ -266,6 +271,8 @@ class MainPanel(wx.Panel):
             dwt_util.wifisense(undo=undo)
         if self.onedrive_check.IsChecked():
             dwt_util.onedrive(undo=undo)
+        if self.windows_update_check.IsChecked():
+            dwt_util.windows_update(undo=undo)
         logger.info("Done. It's recommended that you reboot as soon as possible for the full effect.")
         logger.info("If you feel something didn't work properly, please press the 'Report an issue'")
         console.Center()
