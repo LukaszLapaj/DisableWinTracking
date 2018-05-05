@@ -74,7 +74,7 @@ class ConsoleDialog(wx.Dialog):
 class MainFrame(wx.Frame):
     def __init__(self):
         super(MainFrame, self).__init__(parent=wx.GetApp().GetTopWindow(), title="Disable Windows 10 Tracking",
-                                        size=(415, 245))
+                                        size=(380, 290))
         self.SetMinSize(self.GetSize())
         panel = MainPanel(self)
 
@@ -159,7 +159,6 @@ class MainPanel(wx.Panel):
         self.onedrive_check = wx.CheckBox(self, label="Uninstall OneDrive")
         self.onedrive_check.SetToolTip("Uninstalls OneDrive from your computer and removes it from Explorer.")
 
-        self.service_rad = wx.RadioBox(self, label="Service Method", choices=("Disable", "Delete"))
         # Windows Update checkbox
         self.windows_update_check = wx.CheckBox(self, label="Disable Windows Update")
         self.windows_update_check.SetToolTip("")
@@ -168,10 +167,11 @@ class MainPanel(wx.Panel):
         self.cloudflare_dns_check = wx.CheckBox(self, label="Enable CloudFlare DNS")
         self.cloudflare_dns_check.SetToolTip("")
 
+        self.service_rad = wx.RadioBox(self, label="Services", choices=("Disable", "Delete"))
         self.service_rad.SetItemToolTip(item=0, text="Simply disables the services. This can be undone.")
         self.service_rad.SetItemToolTip(item=1, text="Deletes the services completely. This can't be undone.")
 
-        self.mode_rad = wx.RadioBox(self, label="Mode", choices=("Privacy", "Revert"))
+        self.mode_rad = wx.RadioBox(self, label="Mode", choices=("Apply", "Revert"))
         self.mode_rad.SetItemToolTip(item=0, text="Applies the selected settings.")
         self.mode_rad.SetItemToolTip(item=1, text="Reverts the selected settings.")
 
@@ -186,9 +186,9 @@ class MainPanel(wx.Panel):
         # top_sizer.Add(self.app_box, 0, wx.ALL, 5)
         top_row_sizer.Add(check_sizer, 0, wx.ALL)
         top_row_sizer.Add(rad_sizer, 0, wx.ALL)
-        rad_sizer.Add(self.service_rad, 0, wx.ALL, 10)
-        rad_sizer.Add(go_button, 0, wx.ALL ^ wx.BOTTOM | wx.ALIGN_CENTER, 10)
-        rad_sizer.Add(self.mode_rad, 0, wx.ALL, 10)
+        rad_sizer.Add(self.service_rad, 0, wx.ALL, 13)
+        rad_sizer.Add(self.mode_rad, 0, wx.ALL, 13)
+        rad_sizer.Add(go_button, 0, wx.ALL ^ wx.BOTTOM | wx.ALIGN_CENTER, 15)
         check_sizer.Add(self.service_check, 0, wx.ALL, 1)
         check_sizer.Add(self.diagtrack_check, 0, wx.ALL, 1)
         check_sizer.Add(self.telemetry_check, 0, wx.ALL, 1)
@@ -216,7 +216,15 @@ class MainPanel(wx.Panel):
     #         if isinstance(child, wx.CheckBox):
     #             child.SetValue(event.IsChecked())
 
-    def ip_warn(self, event):
+    def services_waring(self, event):
+            warn = wx.MessageDialog(parent=self,
+                                    message="This option could potentially disable Microsoft Licensing traffic and thus "
+                                            "certain games and apps may cease to work, such as, Forza, or Gears of War.",
+                                    caption="Attention!", style=wx.YES_NO | wx.ICON_EXCLAMATION)
+
+            warn.Destroy()
+
+    def ip_warning(self, event):
         # Warn users about the potential side effects of the IP blocking firewall rules
         if event.IsChecked():
             warn = wx.MessageDialog(parent=self,
@@ -229,7 +237,7 @@ class MainPanel(wx.Panel):
 
             warn.Destroy()
 
-    def hosts_warn(self, event):
+    def hosts_warning(self, event):
         # Warn users about the potential side effects of the extra hosts mod.
         if event.IsChecked():
             warn = wx.MessageDialog(parent=self,
@@ -415,8 +423,8 @@ def silent_default():
     dwt_util.disable_service("DiagTrack")
     dwt_util.services(0)
     dwt_util.telemetry(0)
-    dwt_util.hosts_ad_removal(adblock_whitelist, undo=0)
-    dwt_util.hosts_tracking_removal(normal_domains, undo=0)
+    dwt_util.hosts_ad_removal(adblock_whitelist, 0)
+    dwt_util.hosts_tracking_removal(normal_domains, 0)
     logger.info("COMPLETE")
 
 
@@ -425,7 +433,7 @@ if __name__ == '__main__':
         'a-0001.a-msedge.net', 'a-0002.a-msedge.net', 'a-0003.a-msedge.net', 'a-0004.a-msedge.net',
         'a-0005.a-msedge.net', 'a-0006.a-msedge.net', 'a-0007.a-msedge.net', 'a-0008.a-msedge.net',
         'a-0009.a-msedge.net', 'a-msedge.net', 'a.ads1.msn.com', 'a.ads2.msads.net', 'a.ads2.msn.com',
-        'a.rad.msn.com', 'ac3.msn.com', 'ad.doubleclick.net', 'adnexus.net', 'adnxs.com', 'ads.msn.com',
+        'a.rad.msn.com', 'ac3.msn.com', 'adnexus.net', 'adnxs.com', 'ads.msn.com',
         'ads1.msads.net', 'ads1.msn.com', 'aidps.atdmt.com', 'aka-cdn-ns.adtech.de',
         'az361816.vo.msecnd.net', 'az512334.vo.msecnd.net', 'b.ads1.msn.com', 'b.ads2.msads.net',
         'b.rad.msn.com', 'bs.serving-sys.com', 'c.atdmt.com', 'c.msn.com', 'cdn.atdmt.com',
@@ -468,8 +476,8 @@ if __name__ == '__main__':
     )
 
     adblock_whitelist = (
-        'clickserve.dartsearch.net', 'tc.tradetracker.net', 'googleadservices.com',
-        'ad.doubleclick.net', 'ojrq.net', 'clkuk.tradedoubler.com', 'tracking.publicidees.com'
+        'ad.doubleclick.net','clickserve.dartsearch.net', 'tc.tradetracker.net', 'googleadservices.com',
+        'ojrq.net', 'clkuk.tradedoubler.com', 'tracking.publicidees.com', 'clk.tradedoubler.com'
     )
 
     if '-S' in sys.argv:
