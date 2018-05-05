@@ -255,6 +255,13 @@ def set_registry(keys):
             logger.exception("Registry: Unable to modify {key} key.".format(key=key_name))
 
 
+def clean_hosts():
+    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32\\drivers\\etc')
+    os.remove(hosts_path + '\\hosts')
+    os.remove(hosts_path + '\\hosts.donotremove.bak')
+    flush_dns()
+
+
 def hosts_ad_removal(entries, undo):
     urllib.request.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
     # urllib.request.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")

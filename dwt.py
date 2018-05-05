@@ -124,6 +124,10 @@ class MainPanel(wx.Panel):
                                         "On non-Enterprise OS editions, requires HOSTS file modification.")
         self.telemetry_check.SetValue(1)
 
+        # Clean HOSTS checkbox
+        self.clean_hosts_check = wx.CheckBox(self, label="Clean Hosts")
+        self.clean_hosts_check.SetToolTip("")
+
         # Ad HOSTS file checkbox
         self.ads_check = wx.CheckBox(self, label="Block ad domains")
         self.ads_check.SetToolTip("Adds known ad domains to HOSTS file.")
@@ -180,6 +184,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.service_check, 0, wx.ALL, 1)
         check_sizer.Add(self.diagtrack_check, 0, wx.ALL, 1)
         check_sizer.Add(self.telemetry_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.clean_hosts_check, 0, wx.ALL, 1)
         check_sizer.Add(self.ads_check, 0, wx.ALL, 1)
         check_sizer.Add(self.host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.extra_host_check, 0, wx.ALL, 1)
@@ -247,6 +252,8 @@ class MainPanel(wx.Panel):
             dwt_util.services(undo=undo)
         if self.telemetry_check.IsChecked():
             dwt_util.telemetry(undo=undo)
+        if self.clean_hosts_check.IsChecked():
+            dwt_util.clean_hosts()
         if self.ads_check.IsChecked():
             dwt_util.hosts_ad_removal(self.unpicked_ads, undo=undo)
         if self.host_check.IsChecked():
