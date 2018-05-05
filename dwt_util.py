@@ -378,6 +378,9 @@ def cloudflare_dns(undo):
 
 def flush_dns():
     os.system('ipconfig /flushdns > NUL')
+    os.system('ipconfig /release > NUL')
+    os.system('ipconfig /renew > NUL')
+    os.system('ipconfig /renew6 > NUL')
 
 
 def app_manager(apps):
