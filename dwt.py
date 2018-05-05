@@ -206,6 +206,8 @@ class MainPanel(wx.Panel):
         # self.Bind(wx.EVT_CHECKBOX, handler=self.select_all_apps, source=select_all_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warn, source=self.ip_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.hosts_warn, source=self.extra_host_check)
+        self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warning, source=self.ip_check)
+        self.Bind(wx.EVT_CHECKBOX, handler=self.hosts_warning, source=self.extra_host_check)
         self.Bind(wx.EVT_BUTTON, handler=self.go, source=go_button)
 
         self.SetSizer(top_sizer)
