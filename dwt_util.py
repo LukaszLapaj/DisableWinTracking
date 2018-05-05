@@ -355,6 +355,27 @@ def windows_update(undo):
     return False
 
 
+def cloudflare_dns(undo):
+    if undo:
+        try:
+            os.system('wmic nicconfig where (IPEnabled=TRUE and DHCPEnabled=TRUE) call SetDNSServerSearchOrder() > NUL')
+            logger.info("DNS: Removed CloudFlare DNS Servers")
+            flush_dns()
+            return True
+        except OSError:
+            logger.info("DNS: Failed to remove CloudFlare DNS Servers")
+    else:
+        try:
+            os.system('wmic nicconfig where (IPEnabled=TRUE and DHCPEnabled=TRUE) call SetDNSServerSearchOrder('
+                      '"1.1.1.1", "1.0.0.1") > NUL')
+            logger.info("DNS: Applied CloudFlare DNS Servers")
+            flush_dns()
+            return True
+        except OSError:
+            logger.info("DNS: Failed to apply CloudFlare DNS Servers")
+    return False
+
+
 def flush_dns():
     os.system('ipconfig /flushdns > NUL')
 

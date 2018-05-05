@@ -164,6 +164,10 @@ class MainPanel(wx.Panel):
         self.windows_update_check = wx.CheckBox(self, label="Disable Windows Update")
         self.windows_update_check.SetToolTip("")
 
+        # CloudFlare DNS checkbox
+        self.cloudflare_dns_check = wx.CheckBox(self, label="Enable CloudFlare DNS")
+        self.cloudflare_dns_check.SetToolTip("")
+
         self.service_rad.SetItemToolTip(item=0, text="Simply disables the services. This can be undone.")
         self.service_rad.SetItemToolTip(item=1, text="Deletes the services completely. This can't be undone.")
 
@@ -197,6 +201,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.wifisense_check, 0, wx.ALL, 1)
         check_sizer.Add(self.onedrive_check, 0, wx.ALL, 1)
         check_sizer.Add(self.windows_update_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.cloudflare_dns_check, 0, wx.ALL, 1)
 
         # self.Bind(wx.EVT_CHECKBOX, handler=self.select_all_apps, source=select_all_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warn, source=self.ip_check)
@@ -273,6 +278,8 @@ class MainPanel(wx.Panel):
             dwt_util.onedrive(undo=undo)
         if self.windows_update_check.IsChecked():
             dwt_util.windows_update(undo=undo)
+        if self.cloudflare_dns_check.IsChecked():
+            dwt_util.cloudflare_dns(undo=undo)
         logger.info("Done. It's recommended that you reboot as soon as possible for the full effect.")
         logger.info("If you feel something didn't work properly, please press the 'Report an issue'")
         console.Center()
