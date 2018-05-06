@@ -461,7 +461,9 @@ if __name__ == '__main__':
 
         'fe2.update.microsoft.com.akadns.net', 'view.atdmt.com', 'watson.telemetry.microsoft.com',
         'watson.telemetry.microsoft.com.nsatc.net', 'reports.wes.df.telemetry.microsoft.com',
-        'services.wes.df.telemetry.microsoft.com', 'wes.df.telemetry.microsoft.com'
+        'services.wes.df.telemetry.microsoft.com', 'wes.df.telemetry.microsoft.com',
+        'mobile.pipe.aria.microsoft.com', 'nexus.officeapps.live.com', 'nexusrules.officeapps.live.com',
+        'telemetry.firstpartyapps.oaspapps.com', 'v10.events.data.microsoft.com'
     )
 
     extra_domains = (
