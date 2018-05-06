@@ -73,8 +73,7 @@ def is_64bit():
         return True if os_arch == '64-bit' else False
     else:
         logger.critical("This was only meant to be run on Windows-based system. Specifically, Windows 10.")
-        os._exit(0)
-    return os_arch
+        sys.exit(0)
 
 
 def ip_block(ip_list, undo):
@@ -441,12 +440,4 @@ def app_manager(apps):
 def subprocess_handler(cmd):
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
     output = p.communicate()
-
     return [p.returncode, output]
-
-
-def log_cleanup():
-    try:
-        os.remove('dwt.log')
-    except (OSError, IOError):
-        logger.exception("Could not remove log file.")

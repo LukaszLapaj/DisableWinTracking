@@ -204,8 +204,6 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.cloudflare_dns_check, 0, wx.ALL, 1)
 
         # self.Bind(wx.EVT_CHECKBOX, handler=self.select_all_apps, source=select_all_check)
-        self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warn, source=self.ip_check)
-        self.Bind(wx.EVT_CHECKBOX, handler=self.hosts_warn, source=self.extra_host_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warning, source=self.ip_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.hosts_warning, source=self.extra_host_check)
         self.Bind(wx.EVT_BUTTON, handler=self.go, source=go_button)
@@ -362,7 +360,7 @@ def setup_logging():
     logger.addHandler(stdout_log)
 
     try:
-        file_log = logging.FileHandler(filename='dwt.log')
+        file_log = logging.FileHandler(filename='dwt.log', mode='w+')
         file_log.setLevel(logging.DEBUG)
         file_log.setFormatter(formatter)
         logger.addHandler(file_log)
