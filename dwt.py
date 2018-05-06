@@ -115,7 +115,7 @@ class MainPanel(wx.Panel):
         self.service_check.SetValue(1)
 
         self.diagtrack_check = wx.CheckBox(self, label="Clear DiagTrack log")
-        self.diagtrack_check.SetToolTip("Clears Dianostic Tracking log and prevents modification to it.")
+        self.diagtrack_check.SetToolTip("Clears Diagnostic Tracking log and prevents modification to it.")
         self.diagtrack_check.SetValue(1)
 
         # Telemetry checkbox
@@ -125,27 +125,28 @@ class MainPanel(wx.Panel):
         self.telemetry_check.SetValue(1)
 
         # Clean HOSTS checkbox
-        self.clean_hosts_check = wx.CheckBox(self, label="Clean Hosts")
-        self.clean_hosts_check.SetToolTip("")
+        self.clear_hosts_check = wx.CheckBox(self, label="Clear Hosts")
+        self.clear_hosts_check.SetToolTip("Removes all earlier changes to Hosts file.")
+        self.clear_hosts_check.SetValue(1)
 
         # Ad HOSTS file checkbox
-        self.ads_check = wx.CheckBox(self, label="Block ad domains")
-        self.ads_check.SetToolTip("Adds known ad domains to HOSTS file.")
+        self.ads_check = wx.CheckBox(self, label="Block ad/malware domains")
+        self.ads_check.SetToolTip("Adds known ad/spyware/malware domains to Hosts file.")
         self.ads_check.SetValue(1)
 
         # HOSTS file checkbox
         self.host_check = wx.CheckBox(self, label="Block tracking domains")
-        self.host_check.SetToolTip("Adds known tracking domains to HOSTS file. Required to disable Telemetry")
+        self.host_check.SetToolTip("Adds known tracking domains to Hosts file. Required to disable Telemetry")
         self.host_check.SetValue(1)
 
         # Extra HOSTS checkbox
-        self.extra_host_check = wx.CheckBox(self, label="Block even more tracking domains")
-        self.extra_host_check.SetToolTip("For the paranoid. Adds extra domains to the HOSTS file.\n"
+        self.extra_host_check = wx.CheckBox(self, label="Block more tracking domains")
+        self.extra_host_check.SetToolTip("For the paranoid. Adds extra domains to the Hosts file.\n"
                                          "May cause issues with Skype, Dr. Watson, Hotmail and/or Error Reporting.")
 
         # Flush DNS Service
         self.flush_dns_check = wx.CheckBox(self, label="Flush DNS Service")
-        self.flush_dns_check.SetToolTip("This will restart DNS Service to apply changes instantly")
+        self.flush_dns_check.SetToolTip("This will restart DNS Service to apply all changes instantly.")
         self.flush_dns_check.SetValue(1)
 
         # IP block checkbox
@@ -154,18 +155,19 @@ class MainPanel(wx.Panel):
 
         # WifiSense checkbox
         self.wifisense_check = wx.CheckBox(self, label="WifiSense")
+        self.wifisense_check.SetToolTip("Disable sharing stored Wi-Fi keys.")
 
         # OneDrive uninstall checkbox
         self.onedrive_check = wx.CheckBox(self, label="Uninstall OneDrive")
         self.onedrive_check.SetToolTip("Uninstalls OneDrive from your computer and removes it from Explorer.")
 
         # Windows Update checkbox
-        self.windows_update_check = wx.CheckBox(self, label="Disable Windows Update")
-        self.windows_update_check.SetToolTip("")
+        self.windows_update_check = wx.CheckBox(self, label="Windows Update")
+        self.windows_update_check.SetToolTip("Disable all incoming updates through Windows Update.")
 
         # CloudFlare DNS checkbox
         self.cloudflare_dns_check = wx.CheckBox(self, label="Enable CloudFlare DNS")
-        self.cloudflare_dns_check.SetToolTip("")
+        self.cloudflare_dns_check.SetToolTip("Switch all connections to safe CloudFlare DNS")
 
         self.service_rad = wx.RadioBox(self, label="Services", choices=("Disable", "Delete"))
         self.service_rad.SetItemToolTip(item=0, text="Simply disables the services. This can be undone.")
@@ -186,13 +188,13 @@ class MainPanel(wx.Panel):
         # top_sizer.Add(self.app_box, 0, wx.ALL, 5)
         top_row_sizer.Add(check_sizer, 0, wx.ALL)
         top_row_sizer.Add(rad_sizer, 0, wx.ALL)
-        rad_sizer.Add(self.service_rad, 0, wx.ALL, 13)
-        rad_sizer.Add(self.mode_rad, 0, wx.ALL, 13)
-        rad_sizer.Add(go_button, 0, wx.ALL ^ wx.BOTTOM | wx.ALIGN_CENTER, 15)
+        rad_sizer.Add(self.service_rad, 0, wx.ALL | wx.ALIGN_CENTER, 13)
+        rad_sizer.Add(self.mode_rad, 0, wx.ALL | wx.ALIGN_CENTER, 13)
+        rad_sizer.Add(go_button, 0, wx.ALL | wx.ALIGN_CENTER, 13)
         check_sizer.Add(self.service_check, 0, wx.ALL, 1)
         check_sizer.Add(self.diagtrack_check, 0, wx.ALL, 1)
         check_sizer.Add(self.telemetry_check, 0, wx.ALL, 1)
-        check_sizer.Add(self.clean_hosts_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.clear_hosts_check, 0, wx.ALL, 1)
         check_sizer.Add(self.ads_check, 0, wx.ALL, 1)
         check_sizer.Add(self.host_check, 0, wx.ALL, 1)
         check_sizer.Add(self.extra_host_check, 0, wx.ALL, 1)
@@ -217,12 +219,12 @@ class MainPanel(wx.Panel):
     #             child.SetValue(event.IsChecked())
 
     def services_waring(self, event):
-            warn = wx.MessageDialog(parent=self,
-                                    message="This option could potentially disable Microsoft Licensing traffic and thus "
-                                            "certain games and apps may cease to work, such as, Forza, or Gears of War.",
-                                    caption="Attention!", style=wx.YES_NO | wx.ICON_EXCLAMATION)
+        warn = wx.MessageDialog(parent=self,
+                                message="This option could potentially disable Microsoft Licensing traffic and thus "
+                                        "certain games and apps may cease to work, such as, Forza, or Gears of War.",
+                                caption="Attention!", style=wx.YES_NO | wx.ICON_EXCLAMATION)
 
-            warn.Destroy()
+        warn.Destroy()
 
     def ip_warning(self, event):
         # Warn users about the potential side effects of the IP blocking firewall rules
@@ -270,8 +272,8 @@ class MainPanel(wx.Panel):
             dwt_util.services(undo=undo)
         if self.telemetry_check.IsChecked():
             dwt_util.telemetry(undo=undo)
-        if self.clean_hosts_check.IsChecked():
-            dwt_util.clean_hosts()
+        if self.clear_hosts_check.IsChecked():
+            dwt_util.clear_hosts()
         if self.ads_check.IsChecked():
             dwt_util.hosts_ad_removal(self.unpicked_ads, undo=undo)
         if self.host_check.IsChecked():
@@ -423,6 +425,7 @@ def silent_default():
     dwt_util.disable_service("DiagTrack")
     dwt_util.services(0)
     dwt_util.telemetry(0)
+    dwt_util.clear_hosts()
     dwt_util.hosts_ad_removal(adblock_whitelist, 0)
     dwt_util.hosts_tracking_removal(normal_domains, 0)
     logger.info("COMPLETE")
@@ -478,7 +481,7 @@ if __name__ == '__main__':
     )
 
     adblock_whitelist = (
-        'ad.doubleclick.net','clickserve.dartsearch.net', 'tc.tradetracker.net', 'googleadservices.com',
+        'ad.doubleclick.net', 'clickserve.dartsearch.net', 'tc.tradetracker.net', 'googleadservices.com',
         'ojrq.net', 'clkuk.tradedoubler.com', 'tracking.publicidees.com', 'clk.tradedoubler.com'
     )
 

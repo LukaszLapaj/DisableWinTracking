@@ -8,6 +8,7 @@
 build/
 dist/
 *.spec
+upx/
 
 #Sublime Stuff
 *.sublime-project
@@ -23,4 +24,4 @@ dwticon.res
 getapps.py
 getreleases.py
 hosts.txt
-build.bat
+*.bat

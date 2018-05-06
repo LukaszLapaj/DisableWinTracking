@@ -256,7 +256,7 @@ def set_registry(keys):
             logger.exception("Registry: Unable to modify {key} key.".format(key=key_name))
 
 
-def clean_hosts():
+def clear_hosts():
     hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32\\drivers\\etc')
     try:
         os.remove(os.path.join(hosts_path, 'hosts'))
@@ -413,9 +413,9 @@ def cloudflare_dns(undo):
 
 def flush_dns():
     os.system('ipconfig /flushdns > NUL')
-    os.system('ipconfig /release > NUL')
+    # os.system('ipconfig /release > NUL')
     os.system('ipconfig /renew > NUL')
-    os.system('ipconfig /renew6 > NUL')
+    # os.system('ipconfig /renew6 > NUL')
 
 
 def app_manager(apps):

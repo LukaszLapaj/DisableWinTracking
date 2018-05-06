@@ -2,7 +2,7 @@
 
 A tool that use some of the known methods of disabling tracking and implementing adblock in Windows 10.
 
-<img src="screenshots/win10.png" width="450">
+<img src="screenshots/win10.png" width="400">
 
 ## Download
 
@@ -16,9 +16,9 @@ You can either:
 
 **A)** Run the [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) uploaded to the repository as an Administrator and select which options you'd like.
 
-**B)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-S` argument. This will perform all available options of the version you're using, excluding any hosts modifications.
+**B)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-S` argument. This will perform all default options, excluding any hosts modifications.
 
-**C)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-D` argument. This will perform all default options, inluding hosts modifications.
+**C)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-H` argument. This will perform all default options, inluding hosts modifications.
 
 **D)** Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like.
 
@@ -53,13 +53,14 @@ Action:
 
 #### Hosts
 
-Append known tracking and ad domains to the `HOSTS` file located in `C:\Windows\System32\drivers\etc`
+Clear existing and append known tracking and ad/spyware/malware domains to the `Hosts` file located in `C:\Windows\System32\drivers\etc`
 
 #### IP Blocking
 
 Blocks known tracking IPs with the Windows Firewall. The rules are named TrackingIPX, replacing X with the IP numbers.
 
 #### WifiSense
+
 Disables the following:
 - Credential Share
 - Open-ness
@@ -71,6 +72,14 @@ Runs `C:\Windows\SysWOW64\OneDriveSetup.exe /uninstall` (64 bit) or
 
 Also disables registry entries that keep the OneDrive Icon pinned to your Windows Explorer list:
 <img src="screenshots/onedrive.png" width="500">
+
+#### Windows Update
+
+Disables all incomming updates through Windows Update.
+
+#### CloudFlare DNS
+
+Sets secure and fast CloudFlare DNS as primary and secondary on all connections.
 
 ## Delete Services vs Disable Services
 
