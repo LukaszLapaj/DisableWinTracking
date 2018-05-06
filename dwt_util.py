@@ -16,9 +16,11 @@
 # along with DisableWinTracking.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 import os
+import re
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import urllib.error
 import urllib.parse
@@ -257,68 +259,102 @@ def set_registry(keys):
 
 def clean_hosts():
     hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32\\drivers\\etc')
-    os.remove(hosts_path + '\\hosts')
-    os.remove(hosts_path + '\\hosts.donotremove.bak')
+    try:
+        os.remove(os.path.join(hosts_path, 'hosts'))
+        os.remove(os.path.join(hosts_path, 'hosts.donotremove.bak'))
+        open(os.path.join(hosts_path, 'hosts'), 'w', encoding='utf-8')
+        open(os.path.join(hosts_path, 'hosts.donotremove.bak'), 'w', encoding='utf-8')
+    except (WindowsError, IOError):
+        open(os.path.join(hosts_path, 'hosts'), 'w', encoding='utf-8')
+        open(os.path.join(hosts_path, 'hosts.donotremove.bak'), 'w', encoding='utf-8')
     flush_dns()
 
 
 def hosts_ad_removal(entries, undo):
     urllib.request.URLopener().retrieve("https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts", "hosts.txt")
     # urllib.request.URLopener().retrieve("http://someonewhocares.org/hosts/zero/hosts", "hosts.txt")
+    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32\\drivers\\etc\\hosts')
+    hosts_backup_path = os.path.join(os.environ['SYSTEMROOT'], 'System32\\drivers\\etc\\hosts.donotremove.bak')
+    shutil.copy('hosts.txt', hosts_backup_path)
+    adblock_entries = open('hosts.txt', 'r+', encoding='utf-8').read().split('\n')
     null_ip = "0.0.0.0"
     www = "www."
-    all_entries = [(null_ip + " ") + x for x in entries] + [(null_ip + " " + www) + x for x in entries]
-    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
+    whitelisted_entries = set([(null_ip + " ") + x for x in entries] + [(null_ip + " " + www) + x for x in entries])
     if undo:
         try:
-            with open(hosts_path, 'a') as f:
-                f.write('\n' + '\n'.join(all_entries))
-            os.remove('hosts.txt')
+            with open(hosts_path, 'r', encoding='utf-8') as windows_hosts, \
+                    tempfile.NamedTemporaryFile(delete=False, mode='r+') as temp, \
+                    open(hosts_backup_path, 'r', encoding='utf-8') as hosts:
+                backup_entries = hosts.read().split('\n')
+                windows_entries = windows_hosts.read().split('\n')
+                final_set = list(set(windows_entries) - set(backup_entries))
+                final_set = [x for x in final_set if not (x.count('#') > 0 or re.match(r'^\s*$', (x + '\n')))]
+                for item in final_set:
+                    temp.write(item + '\n')
+                temp.close()
+                hosts.close()
+                windows_hosts.close()
+                shutil.move(temp.name, hosts_path)
             logger.info("Hosts: Successfully reverted adblocking")
             return True
         except (WindowsError, IOError):
             logger.exception("Hosts: Failed to undo hosts file")
     else:
         try:
-            with open('hosts.txt', 'r') as hosts, tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
-                for line in hosts:
-                    if not any(domain in line for domain in all_entries):
-                        temp.write(line)
+            with open(hosts_path, 'r', encoding='utf-8') as windows_hosts, \
+                    tempfile.NamedTemporaryFile(delete=False, mode='r+') as temp, \
+                    open('hosts.txt', 'r+') as hosts:
+                backup_entries = windows_hosts.read().split('\n')
+                final_set = list(set(adblock_entries + backup_entries) - whitelisted_entries)
+                final_set = [x for x in final_set if not (x.count('#') > 0 or re.match(r'^\s*$', (x + '\n')))]
+                for item in final_set:
+                    temp.write(item + '\n')
                 temp.close()
+                hosts.close()
                 shutil.move(temp.name, hosts_path)
             os.remove('hosts.txt')
             logger.info("Hosts: Successfully removed ads")
             return True
-        except OSError:
+        except (WindowsError, IOError):
             logger.exception("Hosts: Failed to modify hosts file")
     return False
 
 
 def hosts_tracking_removal(entries, undo):
+    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32\\drivers\\etc\\hosts')
     null_ip = "0.0.0.0"
     nulled_entries = [(null_ip + " ") + x for x in entries]
-    hosts_path = os.path.join(os.environ['SYSTEMROOT'], 'System32/drivers/etc/hosts')
     if undo:
         try:
-            with open(hosts_path, 'r') as hosts, tempfile.NamedTemporaryFile(delete=False) as temp:
-                for line in hosts:
-                    if not any(domain in line for domain in entries):
-                        temp.write(line)
+            with open(hosts_path, 'r', encoding='utf-8') as windows_hosts, \
+                    tempfile.NamedTemporaryFile(delete=False, mode='r+') as temp:
+                windows_entries = windows_hosts.read().split('\n')
+                final_set = list(set(windows_entries) - set(nulled_entries))
+                final_set = [x for x in final_set if not (x.count('#') > 0 or re.match(r'^\s*$', (x + '\n')))]
+                for item in final_set:
+                    temp.write(item + '\n')
                 temp.close()
+                windows_hosts.close()
                 shutil.move(temp.name, hosts_path)
             logger.info("Hosts: Successfully enabled tracking")
             return True
-        except OSError:
+        except (WindowsError, IOError):
             logger.exception("Hosts: Failed to undo hosts file")
     else:
         try:
-            with open(hosts_path, 'a') as f:
-                f.write('\n' + '\n'.join(nulled_entries))
+            with open(hosts_path, 'r', encoding='utf-8') as windows_hosts, \
+                    tempfile.NamedTemporaryFile(delete=False, mode='r+') as temp:
+                windows_entries = windows_hosts.read().split('\n')
+                final_set = list(set(windows_entries + nulled_entries))
+                final_set = [x for x in final_set if not (x.count('#') > 0 or re.match(r'^\s*$', (x + '\n')))]
+                for item in final_set:
+                    temp.write(item + '\n')
+                temp.close()
+                shutil.move(temp.name, hosts_path)
             logger.info("Hosts: Successfully disabled tracking")
             return True
         except (WindowsError, IOError):
             logger.exception("Hosts: Failed to modify hosts file")
-
     return False
 
 
