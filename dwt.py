@@ -74,7 +74,7 @@ class ConsoleDialog(wx.Dialog):
 class MainFrame(wx.Frame):
     def __init__(self):
         super(MainFrame, self).__init__(parent=wx.GetApp().GetTopWindow(), title="Disable Windows 10 Tracking",
-                                        size=(380, 290))
+                                        size=(380, 305))
         self.SetMinSize(self.GetSize())
         panel = MainPanel(self)
 
@@ -169,6 +169,10 @@ class MainPanel(wx.Panel):
         self.cloudflare_dns_check = wx.CheckBox(self, label="Enable CloudFlare DNS")
         self.cloudflare_dns_check.SetToolTip("Switch all connections to safe CloudFlare DNS")
 
+        # Location checkbox
+        self.location_check = wx.CheckBox(self, label="Disable Location")
+        self.location_check.SetToolTip("")
+
         self.service_rad = wx.RadioBox(self, label="Services", choices=("Disable", "Delete"))
         self.service_rad.SetItemToolTip(item=0, text="Simply disables the services. This can be undone.")
         self.service_rad.SetItemToolTip(item=1, text="Deletes the services completely. This can't be undone.")
@@ -204,6 +208,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.onedrive_check, 0, wx.ALL, 1)
         check_sizer.Add(self.windows_update_check, 0, wx.ALL, 1)
         check_sizer.Add(self.cloudflare_dns_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.location_check, 0, wx.ALL, 1)
 
         # self.Bind(wx.EVT_CHECKBOX, handler=self.select_all_apps, source=select_all_check)
         self.Bind(wx.EVT_CHECKBOX, handler=self.ip_warning, source=self.ip_check)
@@ -289,7 +294,9 @@ class MainPanel(wx.Panel):
         if self.windows_update_check.IsChecked():
             dwt_util.windows_update(undo=undo)
         if self.cloudflare_dns_check.IsChecked():
-            dwt_util.cloudflare_dns(undo=undo)
+            dwt_util.cloudflare(undo=undo)
+        if self.location_check.IsChecked():
+            dwt_util.location(undo=undo)
         logger.info("Done. It's recommended that you reboot as soon as possible for the full effect.")
         logger.info("If you feel something didn't work properly, please press the 'Report an issue'")
         console.Center()

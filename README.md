@@ -81,6 +81,10 @@ Disables all incomming updates through Windows Update.
 
 Sets secure and fast CloudFlare DNS as primary and secondary on all connections.
 
+#### Location
+
+Disables localisation feature in Windows 10.
+
 ## Delete Services vs Disable Services
 
 Selecting "Disable" will simply stop the services from being able to run.

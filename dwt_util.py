@@ -278,6 +278,9 @@ def hosts_ad_removal(entries, undo):
     adblock_entries = open('hosts.txt', 'r+', encoding='utf-8').read().split('\n')
     null_ip = "0.0.0.0"
     www = "www."
+    if os.path.exists('whitelist.txt'):
+        whitelisted_file_entries = open('whitelist.txt', 'r').read().split('\n')
+        entries = entries + whitelisted_file_entries
     whitelisted_entries = set([(null_ip + " ") + x for x in entries] + [(null_ip + " " + www) + x for x in entries])
     if undo:
         try:
@@ -368,7 +371,7 @@ def windows_update(undo):
             os.system('net start DoSvc > NUL')
             os.system('net start wuauserv > NUL')
             os.system('net start UsoSvc > NUL')
-            os.system('wuauclt /updatenow > NUL')
+            os.system('wuauclt.exe /detectnow /updatenow > NUL')
             logger.info("Windows Update: Updates are now enabled")
             return True
         except OSError:
@@ -441,3 +444,20 @@ def subprocess_handler(cmd):
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
     output = p.communicate()
     return [p.returncode, output]
+
+
+def location(undo):
+    if undo:
+        os.system(
+            'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{'
+            'BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v Value /t REG_SZ /d Allow /f > NUL')
+        os.system(
+            'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Permissions\{'
+            'BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v SensorPermissionState /t REG_DWORD /d 1 /f > NUL')
+    else:
+        os.system(
+            'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{'
+            'BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v Value /t REG_SZ /d Deny /f > NUL')
+        os.system(
+            'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Permissions\{'
+            'BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v SensorPermissionState /t REG_DWORD /d 0 /f > NUL')
