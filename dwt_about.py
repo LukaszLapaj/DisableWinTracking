@@ -16,23 +16,20 @@
 # along with DisableWinTracking.  If not, see <http://www.gnu.org/licenses/>.
 
 # dwt.py will become cluttered enough :^)
-import cgi
-import json
-import webbrowser
-from distutils.version import StrictVersion
-from urllib import request
+import datetime
 
 import wx
 import wx.adv
 import wx.lib.scrolledpanel as sp
 
-__version__ = "3.2.1"
+__version__ = "3.2.3"
+year = datetime.date.today().year
 
 
 def about_dialog(parent):
     license_text = """
-    Copyright (C) 10se1ucgo 2015-2016
-    Copyright (C) Łukasz Łapaj 2018
+    Copyright (C) 10se1ucgo 2015-{year}
+    Copyright (C) Łukasz Łapaj 2018-{year}
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,12 +42,13 @@ def about_dialog(parent):
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>."""
+    along with this program. If not, see <http://www.gnu.org/licenses/>.""".format(year=year)
 
     about_info = wx.adv.AboutDialogInfo()
     about_info.SetName("Disable Windows 10 Tracking")
     about_info.SetVersion("v{v}".format(v=__version__))
-    about_info.SetCopyright("Copyright (C) 10se1ucgo 2015-2016 Copyright (C) Łukasz Łapaj 2018")
+    about_info.SetCopyright(
+        "Copyright (C) 10se1ucgo 2015-{year} Copyright (C) Łukasz Łapaj 2018-{year}".format(year=year))
     about_info.SetDescription("A tool to disable tracking and ads in Windows 10")
     about_info.SetWebSite("https://github.com/LukaszLapaj/DisableWinTracking", "GitHub repository")
     about_info.AddDeveloper("10se1ucgo")
@@ -168,25 +166,3 @@ class Licenses(wx.Dialog):
         self.scrolled_panel.SetSizerAndFit(self.scroll_sizer)
         self.scrolled_panel.SetupScrolling()
         self.Show()
-
-
-def update_check(parent):
-    try:
-        r = request.urlopen('https://api.github.com/repos/10se1ucgo/DisableWinTracking/releases/latest')
-    except request.URLError:
-        return
-    value, parameters = cgi.parse_header(r.headers.get('Content-Type', ''))
-    release = json.loads(r.read().decode(parameters.get('charset', 'utf-8')))
-    if release['prerelease']:
-        return
-    new = release['tag_name']
-
-    try:
-        if StrictVersion(__version__) < StrictVersion(new.lstrip('v')):
-            info = wx.MessageDialog(parent, message="DWT {v} is now available!\nGo to download page?".format(v=new),
-                                    caption="DWT Update", style=wx.OK | wx.CANCEL | wx.ICON_INFORMATION)
-            if info.ShowModal() == wx.ID_OK:
-                webbrowser.open_new_tab(release['html_url'])
-            info.Destroy()
-    except ValueError:
-        return
