@@ -43,7 +43,7 @@ class RedirectText(io.StringIO):
 
 class ConsoleDialog(wx.Dialog):
     def __init__(self, old_stdout):
-        wx.Dialog.__init__(self, parent=wx.GetApp().TopWindow, title="Console Output", size=(500, 200),
+        wx.Dialog.__init__(self, parent=wx.GetApp().TopWindow, title="Console Output", size=(510, 200),
                            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         console_box = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
@@ -300,7 +300,7 @@ class MainPanel(wx.Panel):
         if self.windows_update_check.IsChecked():
             dwt_util.windows_update(undo=undo)
         if self.cloudflare_dns_check.IsChecked():
-            dwt_util.cloudflare(undo=undo)
+            dwt_util.cloudflare_dns(undo=undo)
         if self.location_check.IsChecked():
             dwt_util.location(undo=undo)
         logger.info("Done. It's recommended that you reboot as soon as possible for the full effect.")

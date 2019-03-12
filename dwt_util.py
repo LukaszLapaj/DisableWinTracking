@@ -460,7 +460,6 @@ def dvr(undo):
     if undo:
         game_dvr_enabled = allow_game_dvr = 1
         action = "enabled"
-
     dvr_keys = {'GameDVR_Enabled': [winreg.HKEY_CURRENT_USER,
                                     r'System\GameConfigStore',
                                     'GameDVR_Enabled', winreg.REG_DWORD, game_dvr_enabled],
@@ -469,9 +468,7 @@ def dvr(undo):
                                  'AllowGameDVR', winreg.REG_DWORD, allow_game_dvr]}
 
     set_registry(dvr_keys)
-
-
-logger.info("Xbox DVR: successfully {action}".format(action=action))
+    logger.info("Xbox DVR: successfully {action}".format(action=action))
 
 
 def location(undo):
