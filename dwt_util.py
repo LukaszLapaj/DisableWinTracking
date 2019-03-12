@@ -138,7 +138,9 @@ def delete_service(service):
         win32serviceutil.RemoveService(service)
         logger.info("Services: Succesfully removed service '{service}'".format(service=service))
     except pywintypes.error as e:
-        errors = (winerror.ERROR_SERVICE_DOES_NOT_EXIST, winerror.ERROR_SERVICE_NOT_ACTIVE)
+        errors = (winerror.ERROR_SERVICE_DOES_NOT_EXIST,
+                  winerror.ERROR_SERVICE_NOT_ACTIVE,
+                  winerror.ERROR_SERVICE_MARKED_FOR_DELETE)
         if not any(error == e.winerror for error in errors):
             logger.exception("Services: Failed to remove service '{service}'".format(service=service))
 
@@ -232,15 +234,21 @@ def onedrive(undo):
 
     system = "SysWOW64" if is_64bit() else "System32"
     onedrive_setup = os.path.join(os.environ['SYSTEMROOT'], "{system}\\OneDriveSetup.exe".format(system=system))
-    cmd = "{bin} /{action}".format(bin=onedrive_setup, action=action)
 
-    output = subprocess_handler(cmd)
-    if output[0] == -2147219823:
-        logger.info("OneDrive: successfully {action}ed".format(action=action))
+    if os.path.isfile(onedrive_setup):
+        cmd = "{bin} /{action}".format(bin=onedrive_setup, action=action)
+
+        output = subprocess_handler(cmd)
+        if output[0] == -2147219823:
+            logger.info("OneDrive: successfully {action}ed".format(action=action))
+        else:
+            logger.info(
+                "OneDrive: unable to {action}. Exited with code: {code} - {message}".format(action=action,
+                                                                                            code=output[0],
+                                                                                            message=output[1]))
     else:
         logger.info(
-            "OneDrive: unable to {action}. Exited with code: {code} - {message}".format(action=action, code=output[0],
-                                                                                        message=output[1]))
+            "OneDrive: Binary doesn't exist. Unable to {action}. Do not send a report for this.".format(action=action))
 
 
 def set_registry(keys):
@@ -444,6 +452,26 @@ def subprocess_handler(cmd):
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
     output = p.communicate()
     return [p.returncode, output]
+
+
+def dvr(undo):
+    game_dvr_enabled = allow_game_dvr = 0
+    action = "disabled"
+    if undo:
+        game_dvr_enabled = allow_game_dvr = 1
+        action = "enabled"
+
+    dvr_keys = {'GameDVR_Enabled': [winreg.HKEY_CURRENT_USER,
+                                    r'System\GameConfigStore',
+                                    'GameDVR_Enabled', winreg.REG_DWORD, game_dvr_enabled],
+                'AllowGameDVR': [winreg.HKEY_LOCAL_MACHINE,
+                                 r'SOFTWARE\Policies\Microsoft\Windows\GameDVR',
+                                 'AllowGameDVR', winreg.REG_DWORD, allow_game_dvr]}
+
+    set_registry(dvr_keys)
+
+
+logger.info("Xbox DVR: successfully {action}".format(action=action))
 
 
 def location(undo):

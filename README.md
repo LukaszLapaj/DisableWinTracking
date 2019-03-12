@@ -73,6 +73,15 @@ Runs `C:\Windows\SysWOW64\OneDriveSetup.exe /uninstall` (64 bit) or
 Also disables registry entries that keep the OneDrive Icon pinned to your Windows Explorer list:
 <img src="screenshots/onedrive.png" width="500">
 
+#### Xbox DVR
+
+Action:
+* Disable: Set the `GameDVR_Enabled` registry key for both services to `0` (Disabled) Located at `HKEY_CURRENT_USER\System\GameConfigStore`
+* Disable: Set the `AllowGameDVR` registry key for both services to `0` (Disabled) Located at `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR`
+
+This action requires reboot computer for completely applying.
+
+
 #### Windows Update
 
 Disables all incomming updates through Windows Update.

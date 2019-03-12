@@ -34,7 +34,6 @@ class RedirectText(io.StringIO):
         super(RedirectText, self).__init__()
         self.out = console_window
         self.old_out = old_stdout
-        # dwt_util.log_cleanup()
 
     def write(self, string):
         # Oh my god this is the DUMBEST THING I've ever done. (Keeping a reference to the old stdout)
@@ -161,6 +160,10 @@ class MainPanel(wx.Panel):
         self.onedrive_check = wx.CheckBox(self, label="Uninstall OneDrive")
         self.onedrive_check.SetToolTip("Uninstalls OneDrive from your computer and removes it from Explorer.")
 
+        # Xbox DVR checkbox
+        self.dvr_check = wx.CheckBox(self, label="Disable Xbox DVR")
+        self.dvr_check.SetToolTip("Disable Xbox DVR feature to increase FPS in games")
+
         # Windows Update checkbox
         self.windows_update_check = wx.CheckBox(self, label="Windows Update")
         self.windows_update_check.SetToolTip("Disable all incoming updates through Windows Update.")
@@ -206,6 +209,7 @@ class MainPanel(wx.Panel):
         check_sizer.Add(self.ip_check, 0, wx.ALL, 1)
         check_sizer.Add(self.wifisense_check, 0, wx.ALL, 1)
         check_sizer.Add(self.onedrive_check, 0, wx.ALL, 1)
+        check_sizer.Add(self.dvr_check, 0, wx.ALL, 1)
         check_sizer.Add(self.windows_update_check, 0, wx.ALL, 1)
         check_sizer.Add(self.cloudflare_dns_check, 0, wx.ALL, 1)
         check_sizer.Add(self.location_check, 0, wx.ALL, 1)
@@ -291,6 +295,8 @@ class MainPanel(wx.Panel):
             dwt_util.wifisense(undo=undo)
         if self.onedrive_check.IsChecked():
             dwt_util.onedrive(undo=undo)
+        if self.dvr_check.IsChecked():
+            dwt_util.dvr(undo=undo)
         if self.windows_update_check.IsChecked():
             dwt_util.windows_update(undo=undo)
         if self.cloudflare_dns_check.IsChecked():
