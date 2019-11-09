@@ -116,8 +116,9 @@ This program cannot run correctly from a file path that contains Cyrillic charac
 ## License
 
 ```
-Copyright (C) 10se1ucgo 2016
 Copyright (C) Łukasz Łapaj 2018
+Copyright (C) 10se1ucgo 2016
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
