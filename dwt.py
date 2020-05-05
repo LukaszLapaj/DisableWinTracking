@@ -1,3 +1,4 @@
+# Copyright (C) Łukasz Łapaj 2018-2020
 # Copyright (C) 10se1ucgo 2015-2016
 #
 # This file is part of DisableWinTracking.
