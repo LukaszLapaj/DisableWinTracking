@@ -26,7 +26,7 @@ You can either:
 
 ## Dependencies
 This is only to run the script from source, [download the here](https://github.com/LukaszLapaj/DisableWinTracking/releases)
-* Tested on Python 3.6
+* Tested on Python 3.8.2
 * [wxPython](http://wxpython.org/download.php) -- GUI (Tested with wxPython=Phoenix)
 * [PyWin32](http://sourceforge.net/projects/pywin32/files/pywin32/)
 * Windows 10 (Duh)
