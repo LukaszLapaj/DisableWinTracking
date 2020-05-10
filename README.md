@@ -1,12 +1,12 @@
 # DisableWinTracking
 
-A tool that use some of the known methods of disabling tracking and implementing adblock in Windows 10.
+A tool that uses some of the known methods of disabling tracking and implementing adblock in Windows 10.
 
 <img src="screenshots/win10.png" width="400">
 
 ## Download
 
-[DOWNLOAD EXE HERE](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true)
+[DOWNLOAD EXE HERE](https://github.com/LukaszLapaj/DisableWinTracking/releases)
 
 **Note:** Windows Defender may report the EXE as a trojan (Win32/Pocyx.C!cl), and may therefore prevent you from extracting the EXE to anywhere on your computer. Set up an exclusion in **Settings > Update & Security > Windows Defender > Exclusions** by adding the folder you intend to extract the EXE to.
 
@@ -14,22 +14,23 @@ A tool that use some of the known methods of disabling tracking and implementing
 
 You can either:
 
-**A)** Run the [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) uploaded to the repository as an Administrator and select which options you'd like.
+**A)** Run the downloaded [binary](https://github.com/LukaszLapaj/DisableWinTracking/releases) as an Administrator and select which options you'd like.
 
-**B)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-S` argument. This will perform all default options, excluding any hosts modifications.
+**B)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/releases) with the `-S` argument. This will perform all default options, excluding any hosts modifications.
 
-**C)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/blob/master/dwt.exe?raw=true) with the `-H` argument. This will perform all default options, inluding hosts modifications.
+**C)** Run [binary](https://github.com/LukaszLapaj/DisableWinTracking/releases) with the `-H` argument. This will perform all default options, including hosts modifications.
 
 **D)** Install Python and the dependencies listed below and run the script from an elevated command prompt and select which options you'd like.
 
 **You always need to run it as an administrator.**
 
 ## Dependencies
-This is only to run the script from source, [download the here](https://github.com/LukaszLapaj/DisableWinTracking/releases)
-* Tested on Python 3.8.2
-* [wxPython](http://wxpython.org/download.php) -- GUI (Tested with wxPython=Phoenix)
-* [PyWin32](http://sourceforge.net/projects/pywin32/files/pywin32/)
-* Windows 10 (Duh)
+This is only to run the script from source, you can always download binary [here](https://github.com/LukaszLapaj/DisableWinTracking/releases).
+##### Installation
+Tested on Python 3.8.2
+```
+pip install -r requirements.txt
+```
 
 ## Methods Used
 
@@ -84,7 +85,7 @@ This action requires reboot computer for completely applying.
 
 #### Windows Update
 
-Disables all incomming updates through Windows Update.
+Disables all incoming updates through Windows Update.
 
 #### CloudFlare DNS
 
